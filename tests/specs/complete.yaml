@@ -1,0 +1,70 @@
+openapi: 3.0.0
+x-runtime:
+  httpserver:
+    address: ":8080"
+  logger:
+    level: "INFO"
+    output: "STDOUT"
+  stats:
+    output: "NULL"
+    datadog:
+      address: "statsd:8126"
+      flushinterval: "10s"
+  signals:
+    installed:
+      - "OS"
+    os:
+      signals:
+        - 2 # SIGINT
+        - 15 # SIGTERM
+x-transportd:
+  backends:
+    - app
+  app:
+    host: "https://localhost/"
+    pool:
+      ttl: "24h"
+      count: 1
+info:
+  version: 1.0.0
+  title: Sample specification
+  description: Used for testing
+  contact:
+    name: n/a
+    email: na@localhost.com
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+paths:
+  /:
+    post:
+      x-transportd:
+        backend: app
+        enabled:
+          - timeout
+        timeout:
+          after: "250ms"
+      description: Publish a message.
+      parameters:
+        - name: "topic"
+          in: "path"
+          description: "Logical topic name."
+          required: true
+          schema:
+            type: "string"
+        - name: "key"
+          in: "path"
+          description: "The partition key."
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        required: true
+        description: The event to publish.
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+      responses:
+        "204":
+          description: "Success"
