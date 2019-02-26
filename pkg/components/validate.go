@@ -107,7 +107,7 @@ func ResponseValidation(_ context.Context, _ string, _ string, _ string) (interf
 
 // Name of the config root.
 func (*ResponseValidationConfig) Name() string {
-	return "requestvalidation"
+	return "responsevalidation"
 }
 
 // ResponseValidationComponent enables validation of requests against the

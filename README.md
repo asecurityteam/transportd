@@ -152,7 +152,7 @@ x-transportd:
     - "retry"
     - "asaptoken"
     - "requestvalidation"
-    - "requestvalidation"
+    - "responsevalidation"
     - "strip"
   # (string) Backend target for this route.
   backend: "backendName"
