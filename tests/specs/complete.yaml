@@ -38,12 +38,6 @@ info:
 paths:
   /:
     post:
-      x-transportd:
-        backend: app
-        enabled:
-          - timeout
-        timeout:
-          after: "250ms"
       description: Publish a message.
       parameters:
         - name: "topic"
@@ -68,3 +62,36 @@ paths:
       responses:
         "204":
           description: "Success"
+      x-transportd:
+        enabled:
+          - "metrics"
+          - "accesslog"
+          - "timeout"
+          - "hedging"
+          - "retry"
+          - "requestvalidation"
+          - "responsevalidation"
+          - "strip"
+        backend: "app"
+        timeout:
+          after: "175ms"
+        hedging:
+          interval: "50ms"
+        retry:
+          backoff: "50ms"
+          limit: 3
+          codes:
+            - 500
+            - 501
+            - 502
+            - 503
+            - 504
+            - 505
+            - 506
+            - 507
+            - 508
+            - 509
+            - 510
+            - 511
+        strip:
+          count: 0
