@@ -7,6 +7,7 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "d78e91e20cfab4bbec2a698e30a9dd9cb5959bb5"
+  source = "https://bitbucket.org/atlassian/go-asap.git"
   version = "v2.2.0"
 
 [[projects]]
@@ -90,7 +91,8 @@
   version = "v1.1.0"
 
 [[projects]]
-  digest = "1:5fab091426803052f0bfc0ca2191870525b704b1d92bde369be6c87d35bc65c7"
+  branch = "master"
+  digest = "1:0f04310c1d02a1f6d8437cd7da06bad61ce8fc5dc9963077c432398682c61d60"
   name = "github.com/getkin/kin-openapi"
   packages = [
     "jsoninfo",
@@ -99,8 +101,7 @@
     "pathpattern",
   ]
   pruneopts = "UT"
-  revision = "db27d873292dcb033e3ce56f142dfb0ee65d55d4"
-  version = "v0.1.0"
+  revision = "9acc5e936becff2d656c4551e6c471d945809678"
 
 [[projects]]
   digest = "1:2cd7915ab26ede7d95b8749e6b1f933f1c6d5398030684e6505940a10f31cfda"
