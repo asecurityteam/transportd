@@ -21,7 +21,7 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 	}
 
 	loader := openapi3.NewSwaggerLoader()
-	swagger, errYaml := loader.LoadSwaggerFromYAMLData(specification)
+	swagger, errYaml := loader.LoadSwaggerFromData(specification)
 	var errJSON error
 	if errYaml != nil {
 		swagger, errJSON = loader.LoadSwaggerFromData(specification)

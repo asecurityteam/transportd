@@ -68,7 +68,7 @@ func TestClientTransport(t *testing.T) {
 	cl := NewMockRoundTripper(ctrl)
 	reg := NewMockClientRegistry(ctrl)
 	loader := openapi3.NewSwaggerLoader()
-	spec, _ := loader.LoadSwaggerFromYAMLData([]byte(spectxt))
+	spec, _ := loader.LoadSwaggerFromData([]byte(spectxt))
 	router := openapi3filter.NewRouter()
 	assert.Nil(t, router.AddSwagger(spec))
 	rt := &ClientTransport{
@@ -93,7 +93,7 @@ func TestClientTransportNotFound(t *testing.T) {
 
 	reg := NewMockClientRegistry(ctrl)
 	loader := openapi3.NewSwaggerLoader()
-	spec, _ := loader.LoadSwaggerFromYAMLData([]byte(spectxt))
+	spec, _ := loader.LoadSwaggerFromData([]byte(spectxt))
 	router := openapi3filter.NewRouter()
 	assert.Nil(t, router.AddSwagger(spec))
 	rt := &ClientTransport{

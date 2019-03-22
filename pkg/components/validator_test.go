@@ -75,7 +75,7 @@ func TestValidateRequest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromYAMLData([]byte(validatorYaml))
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
 	assert.Nil(t, err)
 	router := openapi3filter.NewRouter()
 	assert.Nil(t, router.AddSwagger(swagger))
@@ -101,7 +101,7 @@ func TestValidateRequestMissingParam(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromYAMLData([]byte(validatorYaml))
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
 	assert.Nil(t, err)
 	router := openapi3filter.NewRouter()
 	assert.Nil(t, router.AddSwagger(swagger))
@@ -124,7 +124,7 @@ func TestValidateResponse(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromYAMLData([]byte(validatorYaml))
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
 	assert.Nil(t, err)
 	router := openapi3filter.NewRouter()
 	assert.Nil(t, router.AddSwagger(swagger))
@@ -152,7 +152,7 @@ func TestValidateResponseMissingHeader(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromYAMLData([]byte(validatorYaml))
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
 	assert.Nil(t, err)
 	router := openapi3filter.NewRouter()
 	assert.Nil(t, router.AddSwagger(swagger))
@@ -180,7 +180,7 @@ func TestValidatorResponseBadShape(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromYAMLData([]byte(validatorYaml))
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
 	assert.Nil(t, err)
 	router := openapi3filter.NewRouter()
 	assert.Nil(t, router.AddSwagger(swagger))
