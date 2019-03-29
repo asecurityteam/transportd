@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	asap "bitbucket.org/atlassian/go-asap"
 	"github.com/SermoDigital/jose/crypto"
+	"github.com/vincent-petithory/dataurl"
 )
 
 type asapValidateTransport struct {
@@ -132,7 +134,12 @@ func (*ASAPTokenComponent) New(ctx context.Context, conf *ASAPTokenConfig) (func
 	if len(conf.KID) < 1 {
 		return nil, fmt.Errorf("kid value is empty")
 	}
-	privateKey, err := asap.NewPrivateKey([]byte(conf.PrivateKey))
+	rawKey := conf.PrivateKey
+	if strings.HasPrefix(rawKey, "data:") {
+		url, _ := dataurl.DecodeString(rawKey)
+		rawKey = string(url.Data)
+	}
+	privateKey, err := asap.NewPrivateKey([]byte(rawKey))
 	if err != nil {
 		return nil, err
 	}

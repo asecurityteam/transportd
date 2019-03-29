@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
+	"github.com/vincent-petithory/dataurl"
 )
 
 const (
@@ -167,6 +168,7 @@ func TestASAPTokenComponent_New(t *testing.T) {
 		Bytes: x509.MarshalPKCS1PrivateKey(pkBytes),
 	}
 	pk := pem.EncodeToMemory(pkBlock)
+	dataURIPK := dataurl.EncodeBytes(pk)
 	tests := []struct {
 		name    string
 		conf    *ASAPTokenConfig
@@ -216,6 +218,17 @@ func TestASAPTokenComponent_New(t *testing.T) {
 			name: "success",
 			conf: &ASAPTokenConfig{
 				PrivateKey: string(pk),
+				KID:        kid,
+				TTL:        tokenTTL,
+				Issuer:     iss,
+				Audiences:  []string{aud},
+			},
+			wantErr: false,
+		},
+		{
+			name: "success-data-uri",
+			conf: &ASAPTokenConfig{
+				PrivateKey: dataURIPK,
 				KID:        kid,
 				TTL:        tokenTTL,
 				Issuer:     iss,
