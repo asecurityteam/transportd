@@ -450,7 +450,7 @@ from a container orchestration environment to one where running the proxy alongs
 the application is not possible. To help in these cases we offer the following:
 
 ```golang
-transport, err := transportd.New(ctx, fileContent, plugins...)
+transport, err := transportd.NewTransport(ctx, fileContent, plugins...)
 if err != nil {
   panic(err.Error())
 }
