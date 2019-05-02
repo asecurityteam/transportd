@@ -154,6 +154,7 @@ x-transportd:
     - "requestvalidation"
     - "responsevalidation"
     - "strip"
+    - "headerinject"
   # (string) Backend target for this route.
   backend: "backendName"
   metrics:
@@ -229,6 +230,11 @@ x-transportd:
   strip:
     # (int) Number of URL segments to remove from the beginning of the path before redirect.
     count: 0
+  headerinject:
+    # ([]string) List of header names to inject.
+    names:
+    # ([]string) List of header values to inject.
+    values:
 ```
 
 <a id="markdown-environment-variables" name="environment-variables"></a>

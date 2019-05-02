@@ -19,5 +19,6 @@ var (
 		RequestValidation,
 		ResponseValidation,
 		Strip,
+		Header,
 	}
 )
