@@ -12,25 +12,28 @@ import (
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
 
-// New generates a configured runtime.
-func New(ctx context.Context, specification []byte, components ...NewComponent) (*runhttp.Runtime, error) {
+func newSpecification(source []byte) (*openapi3.Swagger, error) {
 	envProcessor := NewEnvProcessor()
-	specification, err := envProcessor.Process(specification)
+	source, err := envProcessor.Process(source)
 	if err != nil {
 		return nil, err
 	}
 
 	loader := openapi3.NewSwaggerLoader()
-	swagger, errYaml := loader.LoadSwaggerFromData(specification)
+	swagger, errYaml := loader.LoadSwaggerFromData(source)
 	var errJSON error
 	if errYaml != nil {
-		swagger, errJSON = loader.LoadSwaggerFromData(specification)
+		swagger, errJSON = loader.LoadSwaggerFromData(source)
 	}
 	if errYaml != nil && errJSON != nil {
 		return nil, errJSON
 	}
+	return swagger, nil
+}
+
+func newTransport(ctx context.Context, specification *openapi3.Swagger, components ...NewComponent) (http.RoundTripper, error) {
 	router := openapi3filter.NewRouter()
-	err = router.AddSwagger(swagger)
+	err := router.AddSwagger(specification)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +41,7 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 	// Load and configure available backends.
 	var rawBackendConf interface{}
 	var ok bool
-	if rawBackendConf, ok = swagger.Extensions[ExtensionKey]; !ok {
+	if rawBackendConf, ok = specification.Extensions[ExtensionKey]; !ok {
 		return nil, fmt.Errorf("missing backend configuration")
 	}
 	s, err := SourceFromExtension([]byte(rawBackendConf.(json.RawMessage)))
@@ -56,7 +59,7 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 		Bases:      transports,
 		Components: components,
 	}
-	for path, pathItem := range swagger.Paths {
+	for path, pathItem := range specification.Paths {
 		for method, op := range pathItem.Operations() {
 			if _, ok = op.Extensions[ExtensionKey]; !ok {
 				return nil, fmt.Errorf("missing client configuration for %s.%s", path, method)
@@ -72,13 +75,37 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 			reg.Store(ctx, path, method, client)
 		}
 	}
+	return &ClientTransport{
+		Router:   router,
+		Registry: reg,
+	}, nil
+}
 
+// NewTransport constructs a smart HTTP client from the given specification
+// and set of plugins. For running a service, use the New method instead.
+func NewTransport(ctx context.Context, specification []byte, components ...NewComponent) (http.RoundTripper, error) {
+	spec, err := newSpecification(specification)
+	if err != nil {
+		return nil, err
+	}
+	transport, err := newTransport(ctx, spec, components...)
+	return transport, err
+}
+
+// New generates a configured HTTP runtime. To use as a library, call the
+// NewTransport method instead.
+func New(ctx context.Context, specification []byte, components ...NewComponent) (*runhttp.Runtime, error) {
+	spec, err := newSpecification(specification)
+	if err != nil {
+		return nil, err
+	}
+	transport, err := newTransport(ctx, spec, components...)
+	if err != nil {
+		return nil, err
+	}
 	handler := &httputil.ReverseProxy{
-		Director: func(*http.Request) {},
-		Transport: &ClientTransport{
-			Router:   router,
-			Registry: reg,
-		},
+		Director:  func(*http.Request) {},
+		Transport: transport,
 		ErrorHandler: func(w http.ResponseWriter, r *http.Request, err error) {
 			runhttp.LoggerFromContext(r.Context()).Error(struct {
 				Message string `logevent:"message,default=uncaught-exception"`
@@ -99,10 +126,11 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 
 	// Load and configure the runtime settings.
 	var rawRuntimeConf interface{}
-	if rawRuntimeConf, ok = swagger.Extensions[RuntimeExtensionKey]; !ok {
+	var ok bool
+	if rawRuntimeConf, ok = spec.Extensions[RuntimeExtensionKey]; !ok {
 		return nil, fmt.Errorf("missing x-runtime configuration")
 	}
-	s, err = RuntimeSourceFromExtension([]byte(rawRuntimeConf.(json.RawMessage)))
+	s, err := RuntimeSourceFromExtension([]byte(rawRuntimeConf.(json.RawMessage)))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse runtime configuration: %s", err.Error())
 	}

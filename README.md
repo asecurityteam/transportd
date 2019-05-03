@@ -15,6 +15,7 @@
     - [Custom Plugins And Builds](#custom-plugins-and-builds)
         - [Writing A Component](#writing-a-component)
         - [Generating A Build](#generating-a-build)
+    - [Using As A Library](#using-as-a-library)
     - [Contributing](#contributing)
         - [License](#license)
         - [Contributing Agreement](#contributing-agreement)
@@ -442,6 +443,31 @@ func main() {
 	}
 }
 ```
+
+<a id="markdown-using-as-a-library" name="using-as-a-library"></a>
+## Using As A Library
+
+While the source projects like
+[transport](https://github.com/asecurityteam/transport) and
+[httpstats](https://github.com/asecurityteam/httpstats) can be used directly, there
+is a great deal of convenience in being able to configure all of the combined tooling
+through the OpenAPI extensions. This is particularly true if you are moving a system
+from a container orchestration environment to one where running the proxy alongside
+the application is not possible. To help in these cases we offer the following:
+
+```golang
+transport, err := transportd.NewTransport(ctx, fileContent, plugins...)
+if err != nil {
+  panic(err.Error())
+}
+client := &http.Client{
+  Transport: transport,
+}
+```
+
+The resulting `http.RoundTripper` implements all of the smart functionality of the
+reverse proxy but is exposed as a component that can be embedded in code and used
+anywhere an HTTP client would otherwise be used.
 
 <a id="markdown-contributing" name="contributing"></a>
 ## Contributing
