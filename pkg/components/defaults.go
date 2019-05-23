@@ -20,5 +20,6 @@ var (
 		ResponseValidation,
 		Strip,
 		Header,
+		BasicAuth,
 	}
 )
