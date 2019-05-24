@@ -156,6 +156,7 @@ x-transportd:
     - "responsevalidation"
     - "strip"
     - "headerinject"
+    - "basicauth"
   # (string) Backend target for this route.
   backend: "backendName"
   metrics:
@@ -236,6 +237,11 @@ x-transportd:
     names:
     # ([]string) List of header values to inject.
     values:
+  basicauth:
+    # (string) Username to use in HTTP basic authentication.
+    username: ""
+    # (string) Password to use in HTTP basic authentication.
+    password: ""
 ```
 
 <a id="markdown-environment-variables" name="environment-variables"></a>

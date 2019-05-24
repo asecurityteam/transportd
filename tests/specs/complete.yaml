@@ -72,6 +72,7 @@ paths:
           - "requestvalidation"
           - "responsevalidation"
           - "strip"
+          - "basicauth"
         backend: "app"
         timeout:
           after: "175ms"
@@ -95,3 +96,6 @@ paths:
             - 511
         strip:
           count: 0
+        basicauth:
+          username: "user"
+          password: "password"
