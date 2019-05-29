@@ -16,8 +16,17 @@ type timeoutRoundTripper struct {
 }
 
 func (m *timeoutRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
-	var ctx, cancel = context.WithTimeout(r.Context(), m.after)
-	defer cancel()
+	var ctx, _ = context.WithTimeout(r.Context(), m.after) // nolint
+	// We are intentionally skipping the usual call to `defer cancel()` here
+	// because it would mark the context as canceled as soon as this method
+	// returned. Normally we would want this but the http.Transport uses the
+	// context from the request to manage the state of the underlying network
+	// connection. Canceling the request is a signal to close the connection.
+	// The closing of the connection happens asynchronously of the context
+	// so quickly processed requests are fine. However, requests that take some
+	// time, such as those with large response bodies that need to be copied
+	// back to the caller, would regularly encounter an early termination of
+	// the copy because the underlying connection is closed mid-copy.
 	return m.RoundTripper.RoundTrip(r.WithContext(ctx))
 }
 
