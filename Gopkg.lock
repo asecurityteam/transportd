@@ -32,6 +32,46 @@
   version = "1.1"
 
 [[projects]]
+  digest = "1:6cbbc75cfbe13f5b3ee14c0395ba218144c8f72dc9d610057692c107e40fbab4"
+  name = "github.com/asecurityteam/component-connstate"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e8371614dbdbf67c13cb416c6b7366b0b4570bc4"
+  version = "v0.1.0"
+
+[[projects]]
+  digest = "1:50b6054c3166cb1490af953aca2fe787549c571072e90fb8977a063ca90c8883"
+  name = "github.com/asecurityteam/component-expvar"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "bf0d7879cb8dec94476c3861de4363767fa6e5f0"
+  version = "v0.1.0"
+
+[[projects]]
+  digest = "1:2e65af6319735cecabb4fd33ad796b04929c5656667f2f94cdeda25535d81b59"
+  name = "github.com/asecurityteam/component-log"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2a66e99dd017ee4200bb1483570af727995e6c5d"
+  version = "v0.1.0"
+
+[[projects]]
+  digest = "1:79c187e5b848602e1ab00b6bf1bc4b36b30b580cf3050590da6437caaffe6ec9"
+  name = "github.com/asecurityteam/component-signals"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0d15bff7d1c866f9982eb1e70f84c5e4ef8e4854"
+  version = "v0.1.0"
+
+[[projects]]
+  digest = "1:535f5aab9d8b2a9451d81673b6bcdb342a304fb8de506a11b08ae0fe0e7f24f7"
+  name = "github.com/asecurityteam/component-stat"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "4175403694f83e388be7d0f20404aee8cbb64916"
+  version = "v0.1.0"
+
+[[projects]]
   digest = "1:b4fccd099984b7d110071a0c53fdbc3bb1f5d9f444061f7c9e73ce49c6a15391"
   name = "github.com/asecurityteam/httpstats"
   packages = ["."]
@@ -52,11 +92,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f0efb70549251a537f06f31578b98ae7b856f7f067cc1cc41c1d6eadcc97928e"
+  digest = "1:07e44ec48d802cb92f337bfd3312aaced8d915a9934b60328f56a027c94138b7"
   name = "github.com/asecurityteam/runhttp"
   packages = ["."]
   pruneopts = "UT"
-  revision = "59625dff40b30e0db17b88a6547a8e3232a57eda"
+  revision = "d57832e45684af266e155f7d068b1212cb6e7eda"
 
 [[projects]]
   branch = "master"
