@@ -23,7 +23,7 @@ func (*rtC) Name() string {
 func Help(ctx context.Context, components ...NewComponent) (string, error) {
 	var result bytes.Buffer
 
-	rt := (&runhttp.Component{}).Settings()
+	rt := runhttp.NewComponent().Settings()
 	rtG, _ := settings.Convert(&rtC{rt})
 	_, _ = result.WriteString("The following top level extension must appear and configures the runtime:\n")
 	_, _ = result.WriteString(settings.ExampleYamlGroups([]settings.Group{rtG}))
