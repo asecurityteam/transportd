@@ -20,7 +20,7 @@ const (
 // because the runhttp component has a predefined root of "runtime"
 // that we need to adapt the source to match.
 func RuntimeSourceFromExtension(s []byte) (settings.Source, error) {
-	rt := &runhttp.Component{}
+	rt := runhttp.NewComponent()
 	grp, _ := settings.GroupFromComponent(rt)
 
 	raw := make(map[string]interface{})
@@ -35,9 +35,7 @@ func RuntimeSourceFromExtension(s []byte) (settings.Source, error) {
 // given handler. This method is used to handle the top-level x-runtime
 // block.
 func NewRuntime(ctx context.Context, s settings.Source, h http.Handler) (*runhttp.Runtime, error) {
-	rt := &runhttp.Component{
-		Handler: h,
-	}
+	rt := runhttp.NewComponent().WithHandler(h)
 	rtD := new(runhttp.Runtime)
 	err := settings.NewComponent(ctx, s, rt, rtD)
 	return rtD, err

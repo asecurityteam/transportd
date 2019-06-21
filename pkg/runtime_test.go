@@ -11,7 +11,7 @@ import (
 )
 
 func TestRTSourceFromExtension(t *testing.T) {
-	rt := &runhttp.Component{}
+	rt := runhttp.NewComponent()
 	grp, _ := settings.GroupFromComponent(rt)
 	tests := []struct {
 		name    string
