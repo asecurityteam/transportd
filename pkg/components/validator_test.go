@@ -2,6 +2,7 @@ package components
 
 import (
 	"bytes"
+	"compress/gzip"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -144,8 +145,9 @@ func TestValidateResponse(t *testing.T) {
 		Header:     http.Header{"Content-Type": []string{"application/json"}},
 		Body:       ioutil.NopCloser(bytes.NewBufferString(`{"greeting": "hello"}`)),
 	}, nil)
-	_, err = c.RoundTrip(req)
+	resp, err := c.RoundTrip(req)
 	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
 
 func TestValidateResponseMissingHeader(t *testing.T) {
@@ -203,4 +205,42 @@ func TestValidatorResponseBadShape(t *testing.T) {
 	resp, err := c.RoundTrip(req)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadGateway, resp.StatusCode)
+}
+
+func TestValidateCompressedResponse(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
+	assert.Nil(t, err)
+	router := openapi3filter.NewRouter()
+	assert.Nil(t, router.AddSwagger(swagger))
+
+	rt := NewMockRoundTripper(ctrl)
+	c := &outputValidatingTransport{Wrapped: rt}
+	req, _ := http.NewRequest(http.MethodGet, "https://localhost/hello?name=test1&name2=test2", http.NoBody)
+	req.Header.Set("Accept-Encoding", "gzip")
+	route, pathParams, err := router.FindRoute(req.Method, req.URL)
+	assert.Nil(t, err)
+	req = req.WithContext(transportd.RouteToContext(req.Context(), route))
+	req = req.WithContext(transportd.PathParamsToContext(req.Context(), pathParams))
+
+	var buf bytes.Buffer
+	zw := gzip.NewWriter(&buf)
+	_, err = zw.Write([]byte(`{"greeting": "hello"}`))
+	assert.Nil(t, err)
+	assert.Nil(t, zw.Close())
+
+	rt.EXPECT().RoundTrip(gomock.Any()).Return(&http.Response{
+		StatusCode: http.StatusOK,
+		Status:     "200 OK",
+		Header: http.Header{
+			"Content-Type":     []string{"application/json"},
+			"Content-Encoding": []string{"gzip"},
+		},
+		Body: ioutil.NopCloser(&buf),
+	}, nil)
+	resp, err := c.RoundTrip(req)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
