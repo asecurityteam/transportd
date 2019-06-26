@@ -2,7 +2,9 @@ package components
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
+	"io"
 	"io/ioutil"
 	"net/http"
 
@@ -66,16 +68,17 @@ type outputValidatingTransport struct {
 func (r *outputValidatingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	originalPath := req.URL.Path
 	resp, err := r.Wrapped.RoundTrip(req)
-	// restore the old path just in case something else modified it from the path in the specification
-	req.URL.Path = originalPath
 	if err != nil {
 		return nil, err
 	}
+	// restore the old path just in case something else modified it from the path in the specification
+	req.URL.Path = originalPath
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 	resp.Body = ioutil.NopCloser(bytes.NewReader(body))
+
 	route := transportd.RouteFromContext(req.Context())
 	params := transportd.PathParamsFromContext(req.Context())
 	reqInput := &openapi3filter.RequestValidationInput{
@@ -84,11 +87,25 @@ func (r *outputValidatingTransport) RoundTrip(req *http.Request) (*http.Response
 		QueryParams: req.URL.Query(),
 		PathParams:  params,
 	}
+
+	// response validation will fail if the response body is compressed,
+	// so we ensure the payload is uncompressed
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err = gzip.NewReader(bytes.NewReader(body))
+		if err != nil {
+			return nil, err
+		}
+		defer reader.Close()
+	default:
+		reader = ioutil.NopCloser(bytes.NewReader(body))
+	}
 	input := &openapi3filter.ResponseValidationInput{
 		RequestValidationInput: reqInput,
 		Status:                 resp.StatusCode,
 		Header:                 resp.Header,
-		Body:                   ioutil.NopCloser(bytes.NewReader(body)),
+		Body:                   reader,
 	}
 	err = openapi3filter.ValidateResponse(req.Context(), input)
 	if err != nil {
