@@ -1,4 +1,3 @@
-<a id="markdown-transportd---http-middleware-as-a-service" name="transportd---http-middleware-as-a-service"></a>
 # transportd - HTTP Middleware As A Service
 
 *Status: Incubation*
@@ -22,7 +21,6 @@
 
 <!-- /TOC -->
 
-<a id="markdown-overview" name="overview"></a>
 ## Overview
 
 This project aggregates all of our most effective tooling into an HTTP reverse proxy
@@ -61,14 +59,12 @@ For those kinds of features we recommend [Netflix's Zuul](https://github.com/Net
 with [Netflix's Eureka](https://github.com/Netflix/eureka) or
 [Lyft's Envoy](https://www.envoyproxy.io/).
 
-<a id="markdown-configuration" name="configuration"></a>
 ## Configuration
 
 This proxy is built around OpenAPI consumes an OpenAPI specification as configuration.
 It looks for a set of extensions at certain key points in the document. Below are
 each of the locations and extensions the system expects in order to run.
 
-<a id="markdown-runtime-settings" name="runtime-settings"></a>
 ### Runtime Settings
 
 The HTTP server is provided by another one of our libraries,
@@ -109,7 +105,6 @@ x-runtime:
     address: ":8080"
 ```
 
-<a id="markdown-backend-settings" name="backend-settings"></a>
 ### Backend Settings
 
 In addition to the runtime, the system also expects that all backend configurations
@@ -132,7 +127,6 @@ x-transportd:
       ttl: "1h0m0s"
 ```
 
-<a id="markdown-route-settings" name="route-settings"></a>
 ### Route Settings
 
 Each route in the OpenAPI specification will need its own `x-transportd`
@@ -244,7 +238,6 @@ x-transportd:
     password: ""
 ```
 
-<a id="markdown-environment-variables" name="environment-variables"></a>
 ### Environment Variables
 
 For cases where a static YAML file is insufficient, such as deploying to multiple
@@ -256,7 +249,6 @@ environment variable value that is identified by the name inside the pattern.
 For example, `${FOO}` will result in the `FOO` environment variable being fetched
 and the value inserted.
 
-<a id="markdown-custom-plugins-and-builds" name="custom-plugins-and-builds"></a>
 ## Custom Plugins And Builds
 
 Unfortunately, go does not have good support for dynamic loading of plugins and the
@@ -264,7 +256,6 @@ alternatives to the standard library `plugin` package all require some form of
 multi-processing and RPC. Because of this, adding features beyond the core set
 requires creating a custom build of this project.
 
-<a id="markdown-writing-a-component" name="writing-a-component"></a>
 ### Writing A Component
 
 This project uses another one of our libraries, [settings](https://github.com/asecurityteam/settings),
@@ -374,7 +365,6 @@ func (*TimeoutComponent) New(_ context.Context, conf *TimeoutConfig) (func(http.
 }
 ```
 
-<a id="markdown-generating-a-build" name="generating-a-build"></a>
 ### Generating A Build
 
 Creating a custom build is equivalent to copying the `main.go` from this project
@@ -450,7 +440,6 @@ func main() {
 }
 ```
 
-<a id="markdown-using-as-a-library" name="using-as-a-library"></a>
 ## Using As A Library
 
 While the source projects like
@@ -475,15 +464,12 @@ The resulting `http.RoundTripper` implements all of the smart functionality of t
 reverse proxy but is exposed as a component that can be embedded in code and used
 anywhere an HTTP client would otherwise be used.
 
-<a id="markdown-contributing" name="contributing"></a>
 ## Contributing
 
-<a id="markdown-license" name="license"></a>
 ### License
 
 This project is licensed under Apache 2.0. See LICENSE.txt for details.
 
-<a id="markdown-contributing-agreement" name="contributing-agreement"></a>
 ### Contributing Agreement
 
 Atlassian requires signing a contributor's agreement before we can accept a
