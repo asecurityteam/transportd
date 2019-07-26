@@ -115,6 +115,17 @@
   version = "1.1.2"
 
 [[projects]]
+  digest = "1:28c998a6447b4d28ca5e0b2d045bf00affe03e3494019a583eee2803472be09c"
+  name = "github.com/asecurityteam/transportd"
+  packages = [
+    "pkg",
+    "pkg/components",
+  ]
+  pruneopts = "UT"
+  revision = "291b8fc9a02ae14a38d25f1f5993464c25a077b4"
+  version = "v0.3.2"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -513,6 +524,8 @@
     "github.com/asecurityteam/runhttp",
     "github.com/asecurityteam/settings",
     "github.com/asecurityteam/transport",
+    "github.com/asecurityteam/transportd/pkg",
+    "github.com/asecurityteam/transportd/pkg/components",
     "github.com/getkin/kin-openapi/openapi3",
     "github.com/getkin/kin-openapi/openapi3filter",
     "github.com/gobuffalo/packr/v2",
