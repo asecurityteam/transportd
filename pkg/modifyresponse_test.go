@@ -62,7 +62,7 @@ func TestEnforceRelativeLocation(t *testing.T) {
 			wantLocation: "/path/to/api?q=1",
 		},
 		{
-			name: "relative location (trailing)",
+			name: "absolute location (trailing)",
 			resp: &http.Response{
 				Header: http.Header{
 					"Location": []string{"https://localhost/path/to/api/?q=1"},
