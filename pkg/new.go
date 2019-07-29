@@ -122,6 +122,9 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 			w.WriteHeader(http.StatusBadGateway)
 			_, _ = w.Write(b)
 		},
+		ModifyResponse: (MultiResponseModifier{
+			EnforceRelativeLocation,
+		}).ModifyResponse,
 	}
 
 	// Load and configure the runtime settings.
