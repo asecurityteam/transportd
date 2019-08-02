@@ -132,7 +132,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0f04310c1d02a1f6d8437cd7da06bad61ce8fc5dc9963077c432398682c61d60"
+  digest = "1:d4482076b38eefad8454f78ad740a06a9e6ba3e8135d6e374f5f30d62d27123f"
   name = "github.com/getkin/kin-openapi"
   packages = [
     "jsoninfo",
@@ -141,7 +141,7 @@
     "pathpattern",
   ]
   pruneopts = "UT"
-  revision = "9acc5e936becff2d656c4551e6c471d945809678"
+  revision = "8785b416cb32bd1890a2518d1be7efcf5d62c0df"
 
 [[projects]]
   digest = "1:2cd7915ab26ede7d95b8749e6b1f933f1c6d5398030684e6505940a10f31cfda"
