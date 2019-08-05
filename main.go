@@ -32,7 +32,13 @@ func main() {
 	// the environment or the name of a file where the specification is
 	// stored. Priority is given to the file if both are present.
 	fileName := os.Getenv("TRANSPORTD_OPENAPI_SPECIFICATION_FILE")
-	fileContent := []byte(os.Getenv("TRANPSPORTD_OPENAPI_SPECIFICATION_CONTENT"))
+	// For backward compatibility, the previously misspelled env var key
+	// "TRANPSPORTD_OPENAPI_SPECIFICATION_CONTENT" is supported, but
+	// the properly spelled key takes priority.
+	fileContent := []byte(os.Getenv("TRANSPORTD_OPENAPI_SPECIFICATION_CONTENT"))
+	if len(fileContent) == 0 {
+		fileContent = []byte(os.Getenv("TRANPSPORTD_OPENAPI_SPECIFICATION_CONTENT"))
+	}
 	var errRead error
 	if fileName != "" {
 		fileContent, errRead = ioutil.ReadFile(fileName)
