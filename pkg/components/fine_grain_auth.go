@@ -2,7 +2,6 @@ package components
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
@@ -10,10 +9,27 @@ type authHeader struct {
 	Wrapped http.RoundTripper
 }
 
+func Contains(s []string, target string) bool{
+	for _, c := range s{
+		if target == c {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *authHeader) RoundTrip(req *http.Request) (*http.Response, error){
-	header := req.Header
-	header.Del("Authorization")
-	fmt.Println(header)
+	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
+	// We can probably load this from yaml somewhere? where load this from?
+	whitelist := []string{"ciso-security-all"}
+
+	for _, g:= range incomingLdapGroups{
+		if Contains(whitelist, g){
+			continue
+		} else {
+			return newError(http.StatusUnauthorized, "missing required LDAP group"), nil
+		}
+	}
 	return r.Wrapped.RoundTrip(req)
 }
 
