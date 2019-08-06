@@ -21,7 +21,7 @@ func Contains(s []string, target string) bool{
 func (r *authHeader) RoundTrip(req *http.Request) (*http.Response, error){
 	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
 	// We can probably load this from a yaml file somewhere? or where should we load this from?
-	whitelist := []string{"ciso-security-all"}
+	whitelist := []string{"some_ldap_group"}
 
 	for _, g:= range incomingLdapGroups{
 		if Contains(whitelist, g){
