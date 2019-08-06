@@ -2,11 +2,13 @@ package components
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
 type authHeader struct {
 	Wrapped http.RoundTripper
+	AllowedGroupWhiteList []string
 }
 
 // temp function for searching through a slice until we move the whitelist into a map
@@ -23,8 +25,9 @@ func (r *authHeader) RoundTrip(req *http.Request) (*http.Response, error){
 	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
 	// We can probably load this from a yaml file somewhere? or where should we load this from?
 	// This should probably be a map? to make checking the group membership faster
-	whitelist := []string{"some_ldap_group"}
-
+	whitelist := r.AllowedGroupWhiteList
+	fmt.Println("## INCOMING LDAP GROUPS ARE", incomingLdapGroups)
+	fmt.Println("## WHITE LIST IS: ", whitelist)
 	for _, g:= range incomingLdapGroups{
 		if Contains(whitelist, g){
 			continue
@@ -35,7 +38,9 @@ func (r *authHeader) RoundTrip(req *http.Request) (*http.Response, error){
 	return r.Wrapped.RoundTrip(req)
 }
 
-type AuthConfig struct {}
+type AuthConfig struct {
+	AllowedGroupWhiteList []string `description:List of ldap groups allowed to access your service`
+}
 
 func (*AuthConfig) Name() string {
 	return "authconfig"
