@@ -9,6 +9,7 @@ type authHeader struct {
 	Wrapped http.RoundTripper
 }
 
+// temp function for searching through a slice until we move the whitelist into a map
 func Contains(s []string, target string) bool{
 	for _, c := range s{
 		if target == c {
@@ -21,6 +22,7 @@ func Contains(s []string, target string) bool{
 func (r *authHeader) RoundTrip(req *http.Request) (*http.Response, error){
 	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
 	// We can probably load this from a yaml file somewhere? or where should we load this from?
+	// This should probably be a map? to make checking the group membership faster
 	whitelist := []string{"some_ldap_group"}
 
 	for _, g:= range incomingLdapGroups{
