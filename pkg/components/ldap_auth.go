@@ -14,6 +14,8 @@ type authHeader struct {
 // temp function for searching through a slice until we move the whitelist into a map
 func Contains(s []string, target string) bool{
 	for _, c := range s{
+		fmt.Println("checking group: ", c)
+		fmt.Println("for target: ", target)
 		if target == c {
 			return true
 		}
