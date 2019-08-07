@@ -14,7 +14,7 @@ var (
 	defaultRetryBackoff = 50 * time.Millisecond
 )
 
-// RetryConfig enables automated retires for status codes.
+// RetryConfig enables automated retries for status codes.
 type RetryConfig struct {
 	Codes   []int         `description:"HTTP status codes that trigger a retry."`
 	Limit   int           `description:"Maximum retry attempts."`
