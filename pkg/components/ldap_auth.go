@@ -2,20 +2,17 @@ package components
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
-type authHeader struct {
+type authValidationTransport struct {
 	Wrapped http.RoundTripper
 	AllowedGroups []string
+	LdapGroupsHeaderName string
 }
 
-// temp function for searching through a slice until we move the whitelist into a map
 func Contains(s []string, target string) bool{
 	for _, c := range s{
-		fmt.Println("checking group: ", c)
-		fmt.Println("for target: ", target)
 		if target == c {
 			return true
 		}
@@ -23,13 +20,9 @@ func Contains(s []string, target string) bool{
 	return false
 }
 
-func (r *authHeader) RoundTrip(req *http.Request) (*http.Response, error){
-	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
-	// We can probably load this from a yaml file somewhere? or where should we load this from?
-	// This should probably be a map? to make checking the group membership faster
+func (r *authValidationTransport) RoundTrip(req *http.Request) (*http.Response, error){
+	incomingLdapGroups := req.Header[r.LdapGroupsHeaderName]
 	allowedList := r.AllowedGroups
-	fmt.Println("## INCOMING LDAP GROUPS ARE", incomingLdapGroups)
-	fmt.Println("## WHITE LIST IS: ", allowedList)
 	for _, g:= range incomingLdapGroups{
 		if Contains(allowedList, g){
 			continue
@@ -42,6 +35,7 @@ func (r *authHeader) RoundTrip(req *http.Request) (*http.Response, error){
 
 type AuthConfig struct {
 	AllowedGroups []string `description:List of ldap groups allowed to access your service`
+	LdapGroupsHeaderName string `description:Name of the header that contains the ldap group membership of an incoming request`
 }
 
 func (*AuthConfig) Name() string {
@@ -60,9 +54,10 @@ func (*AuthConfigComponent) Settings() *AuthConfig {
 
 func (*AuthConfigComponent) New(_ context.Context, conf *AuthConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
-		return &authHeader{
+		return &authValidationTransport{
 			Wrapped: wrapped,
 			AllowedGroups: conf.AllowedGroups,
+			LdapGroupsHeaderName: conf.LdapGroupsHeaderName,
 		}
 	}, nil
 }
