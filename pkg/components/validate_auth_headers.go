@@ -41,14 +41,14 @@ type AuthConfig struct {
 
 // Name of the config root
 func (*AuthConfig) Name() string {
-	return "authconfig"
+	return "authheaders"
 }
 
 // AuthConfigComponent is a plugin
 type AuthConfigComponent struct{}
 
-// Auth satisfies the NewComponent signature
-func Auth(_ context.Context, _ string, _ string, _ string) (interface{}, error) {
+// ValidateAuthHeaders satisfies the NewComponent signature
+func ValidateAuthHeaders(_ context.Context, _ string, _ string, _ string) (interface{}, error) {
 	return &AuthConfigComponent{}, nil
 }
 
