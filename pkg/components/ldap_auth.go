@@ -6,13 +6,13 @@ import (
 )
 
 type authValidationTransport struct {
-	Wrapped http.RoundTripper
-	AllowedGroups []string
+	Wrapped              http.RoundTripper
+	AllowedGroups        []string
 	LdapGroupsHeaderName string
 }
 
-func Contains(s []string, target string) bool{
-	for _, c := range s{
+func Contains(s []string, target string) bool {
+	for _, c := range s {
 		if target == c {
 			return true
 		}
@@ -20,11 +20,11 @@ func Contains(s []string, target string) bool{
 	return false
 }
 
-func (r *authValidationTransport) RoundTrip(req *http.Request) (*http.Response, error){
+func (r *authValidationTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	incomingLdapGroups := req.Header[r.LdapGroupsHeaderName]
 	allowedList := r.AllowedGroups
-	for _, g:= range incomingLdapGroups{
-		if Contains(allowedList, g){
+	for _, g := range incomingLdapGroups {
+		if Contains(allowedList, g) {
 			continue
 		} else {
 			return newError(http.StatusUnauthorized, "missing required LDAP group"), nil
@@ -33,13 +33,11 @@ func (r *authValidationTransport) RoundTrip(req *http.Request) (*http.Response, 
 	return r.Wrapped.RoundTrip(req)
 }
 
-
 // AuthConfig is used to configure authorization based on ldap group membership sent in a header
 type AuthConfig struct {
-	AllowedGroups []string `description:"List of ldap groups allowed to access your service"`
-	LdapGroupsHeaderName string `description:"Name of the header that contains the ldap group membership of an incoming request"`
+	AllowedGroups        []string `description:"List of ldap groups allowed to access your service"`
+	LdapGroupsHeaderName string   `description:"Name of the header that contains the ldap group membership of an incoming request"`
 }
-
 
 // Name of the config root
 func (*AuthConfig) Name() string {
@@ -47,7 +45,7 @@ func (*AuthConfig) Name() string {
 }
 
 // AuthConfigComponent is a plugin
-type AuthConfigComponent struct {}
+type AuthConfigComponent struct{}
 
 // Auth satisfies the NewComponent signature
 func Auth(_ context.Context, _ string, _ string, _ string) (interface{}, error) {
@@ -63,8 +61,8 @@ func (*AuthConfigComponent) Settings() *AuthConfig {
 func (*AuthConfigComponent) New(_ context.Context, conf *AuthConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
 		return &authValidationTransport{
-			Wrapped: wrapped,
-			AllowedGroups: conf.AllowedGroups,
+			Wrapped:              wrapped,
+			AllowedGroups:        conf.AllowedGroups,
 			LdapGroupsHeaderName: conf.LdapGroupsHeaderName,
 		}
 	}, nil
