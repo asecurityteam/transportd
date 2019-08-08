@@ -17,10 +17,12 @@ func TestStripTransport(t *testing.T) {
 		Wrapped: rt,
 		Count:   2,
 	}
-	req, _ := http.NewRequest(http.MethodGet, "https://localhost/one/two/three/four", http.NoBody)
+	u := "https://localhost/one/two/three/four"
+	req, _ := http.NewRequest(http.MethodGet, u, http.NoBody)
 
 	rt.EXPECT().RoundTrip(gomock.Any()).Do(func(r *http.Request) {
 		assert.Equal(t, "https://localhost/three/four", r.URL.String())
+		assert.Equal(t, "/three/four", r.URL.Path)
 	}).Return(nil, nil)
 	_, _ = c.RoundTrip(req)
 }
