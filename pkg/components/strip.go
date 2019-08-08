@@ -13,7 +13,7 @@ type strippingTransport struct {
 }
 
 func (r *strippingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.URL.Path = path.Join(strings.Split(req.URL.Path, "/")[r.Count+1:]...)
+	req.URL.Path = "/" + path.Join(strings.Split(req.URL.Path, "/")[r.Count+1:]...)
 	return r.Wrapped.RoundTrip(req)
 }
 
