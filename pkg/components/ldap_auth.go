@@ -34,8 +34,8 @@ func (r *authValidationTransport) RoundTrip(req *http.Request) (*http.Response, 
 }
 
 type AuthConfig struct {
-	AllowedGroups []string `description:List of ldap groups allowed to access your service`
-	LdapGroupsHeaderName string `description:Name of the header that contains the ldap group membership of an incoming request`
+	AllowedGroups []string `description:"List of ldap groups allowed to access your service"`
+	LdapGroupsHeaderName string `description:"Name of the header that contains the ldap group membership of an incoming request"`
 }
 
 func (*AuthConfig) Name() string {
