@@ -5,13 +5,13 @@ import (
 	"net/http"
 )
 
-type authValidationTransport struct {
+type validateAuthHeaderTransport struct {
 	Wrapped              http.RoundTripper
 	AllowedGroups        []string
 	LdapGroupsHeaderName string
 }
 
-func Contains(s []string, target string) bool {
+func contains(s []string, target string) bool {
 	for _, c := range s {
 		if target == c {
 			return true
@@ -20,11 +20,11 @@ func Contains(s []string, target string) bool {
 	return false
 }
 
-func (r *authValidationTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	incomingLdapGroups := req.Header[r.LdapGroupsHeaderName]
 	allowedList := r.AllowedGroups
 	for _, g := range incomingLdapGroups {
-		if Contains(allowedList, g) {
+		if contains(allowedList, g) {
 			continue
 		} else {
 			return newError(http.StatusUnauthorized, "missing required LDAP group"), nil
@@ -60,7 +60,7 @@ func (*AuthConfigComponent) Settings() *AuthConfig {
 // New generates the middleware.
 func (*AuthConfigComponent) New(_ context.Context, conf *AuthConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
-		return &authValidationTransport{
+		return &validateAuthHeaderTransport{
 			Wrapped:              wrapped,
 			AllowedGroups:        conf.AllowedGroups,
 			LdapGroupsHeaderName: conf.LdapGroupsHeaderName,
