@@ -2,13 +2,13 @@ package components
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
 type validateAuthHeaderTransport struct {
-	Wrapped              http.RoundTripper
-	AllowedGroups        []string
-	LdapGroupsHeaderName string
+	Wrapped http.RoundTripper
+	Allowed map[string][]string
 }
 
 func contains(s []string, target string) bool {
@@ -21,8 +21,10 @@ func contains(s []string, target string) bool {
 }
 
 func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	incomingLdapGroups := req.Header[r.LdapGroupsHeaderName]
-	allowedList := r.AllowedGroups
+	incomingLdapGroups := req.Header["X-Slauth-Ldap-Groups"]
+	allowedList := r.Allowed["X-Slauth-Ldap-Groups"]
+	fmt.Println("##### ALLOWED GROUPS #####: ", allowedList)
+	fmt.Println("##### INCOMING LDAP GROUPS ####: ", incomingLdapGroups)
 	for _, g := range incomingLdapGroups {
 		if contains(allowedList, g) {
 			continue
@@ -35,8 +37,7 @@ func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Respon
 
 // AuthConfig is used to configure authorization based on ldap group membership sent in a header
 type AuthConfig struct {
-	AllowedGroups        []string `description:"List of ldap groups allowed to access your service"`
-	LdapGroupsHeaderName string   `description:"Name of the header that contains the ldap group membership of an incoming request"`
+	Allowed map[string][]string `description:"List of allowed headers and "`
 }
 
 // Name of the config root
@@ -61,9 +62,8 @@ func (*AuthConfigComponent) Settings() *AuthConfig {
 func (*AuthConfigComponent) New(_ context.Context, conf *AuthConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
 		return &validateAuthHeaderTransport{
-			Wrapped:              wrapped,
-			AllowedGroups:        conf.AllowedGroups,
-			LdapGroupsHeaderName: conf.LdapGroupsHeaderName,
+			Wrapped: wrapped,
+			Allowed: conf.Allowed,
 		}
 	}, nil
 }
