@@ -21,9 +21,10 @@ func contains(s []string, target string) bool {
 }
 
 func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	incomingLdapGroups := req.Header["X-Slauth-Ldap-Groups"]
-	allowedList := r.Allowed["X-Slauth-Ldap-Groups"]
+	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
+	allowedList := r.Allowed["x-slauth-user-groups"]
 	fmt.Println("##### ALLOWED GROUPS #####: ", allowedList)
+	fmt.Println("##### ALLOWED #####: ", r.Allowed)
 	fmt.Println("##### INCOMING LDAP GROUPS ####: ", incomingLdapGroups)
 	for _, g := range incomingLdapGroups {
 		if contains(allowedList, g) {
