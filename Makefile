@@ -2,10 +2,7 @@ TAG := $(shell git rev-parse --short HEAD)
 DIR := $(shell pwd -L)
 
 dep:
-	docker run -ti \
-        --mount src="$(DIR)",target="$(DIR)",type="bind" \
-        -w "$(DIR)" \
-        asecurityteam/sdcli:v1 go dep
+	GO111MODULE=on go mod vendor
 
 lint:
 	docker run -ti \
