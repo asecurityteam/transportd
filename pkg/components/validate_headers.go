@@ -2,7 +2,6 @@ package components
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
@@ -35,11 +34,6 @@ func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]s
 }
 
 func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
-	allowedList := r.Allowed["x-slauth-user-groups"]
-	fmt.Println("##### ALLOWED GROUPS #####: ", allowedList)
-	fmt.Println("##### ALLOWED #####: ", r.Allowed)
-	fmt.Println("##### INCOMING LDAP GROUPS ####: ", incomingLdapGroups)
 	if incomingMatchesAllowed(r.Allowed, req.Header) {
 		return r.Wrapped.RoundTrip(req)
 	}
