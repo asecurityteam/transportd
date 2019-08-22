@@ -20,20 +20,30 @@ func contains(s []string, target string) bool {
 	return false
 }
 
+func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) bool{
+	allowedValuesFound := false
+	for allowedKey, allowedValues := range allowed {
+		matchedIncomingHeaderValues := incoming[allowedKey]
+		for _, item := range allowedValues {
+			allowedValuesFound = contains(matchedIncomingHeaderValues, item)
+			if allowedValuesFound == false {
+				return allowedValuesFound
+			}
+		}
+	}
+	return allowedValuesFound
+}
+
 func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	incomingLdapGroups := req.Header["X-Slauth-User-Groups"]
 	allowedList := r.Allowed["x-slauth-user-groups"]
 	fmt.Println("##### ALLOWED GROUPS #####: ", allowedList)
 	fmt.Println("##### ALLOWED #####: ", r.Allowed)
 	fmt.Println("##### INCOMING LDAP GROUPS ####: ", incomingLdapGroups)
-	for _, g := range incomingLdapGroups {
-		if contains(allowedList, g) {
-			continue
-		} else {
-			return newError(http.StatusUnauthorized, "missing required LDAP group"), nil
-		}
+	if incomingMatchesAllowed(r.Allowed, req.Header) {
+		return r.Wrapped.RoundTrip(req)
 	}
-	return r.Wrapped.RoundTrip(req)
+	return newError(http.StatusUnauthorized, "missing required LDAP group"), nil
 }
 
 // AuthConfig is used to configure authorization based on ldap group membership sent in a header
