@@ -40,31 +40,31 @@ func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Respon
 	return newError(http.StatusUnauthorized, "missing required LDAP group"), nil
 }
 
-// AuthConfig is used to configure authorization based on ldap group membership sent in a header
-type AuthConfig struct {
+// ValidateHeaderConfig is used to configure authorization based on ldap group membership sent in a header
+type ValidateHeaderConfig struct {
 	Allowed map[string][]string `description:"List of allowed headers and "`
 }
 
 // Name of the config root
-func (*AuthConfig) Name() string {
+func (*ValidateHeaderConfig) Name() string {
 	return "authheaders"
 }
 
-// AuthConfigComponent is a plugin
-type AuthConfigComponent struct{}
+// ValidateHeaderConfigComponent is a plugin
+type ValidateHeaderConfigComponent struct{}
 
 // ValidateAuthHeaders satisfies the NewComponent signature
-func ValidateAuthHeaders(_ context.Context, _ string, _ string, _ string) (interface{}, error) {
-	return &AuthConfigComponent{}, nil
+func ValidateHeaders(_ context.Context, _ string, _ string, _ string) (interface{}, error) {
+	return &ValidateHeaderConfigComponent{}, nil
 }
 
 // Settings generates a config populated with defaults.
-func (*AuthConfigComponent) Settings() *AuthConfig {
-	return &AuthConfig{}
+func (*ValidateHeaderConfigComponent) Settings() *ValidateHeaderConfig {
+	return &ValidateHeaderConfig{}
 }
 
 // New generates the middleware.
-func (*AuthConfigComponent) New(_ context.Context, conf *AuthConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
+func (*ValidateHeaderConfigComponent) New(_ context.Context, conf *ValidateHeaderConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
 		return &validateAuthHeaderTransport{
 			Wrapped: wrapped,
