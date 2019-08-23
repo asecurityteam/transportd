@@ -21,6 +21,6 @@ var (
 		Strip,
 		Header,
 		BasicAuth,
-		ValidateAuthHeaders,
+		ValidateHeaders,
 	}
 )
