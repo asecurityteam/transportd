@@ -2,6 +2,7 @@ package components
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -19,13 +20,13 @@ func contains(s []string, target string) bool {
 	return false
 }
 
-func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) bool{
+func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) bool {
 	allowedValuesFound := false
 	for allowedKey, allowedValues := range allowed {
 		matchedIncomingHeaderValues := incoming[allowedKey]
 		for _, item := range allowedValues {
 			allowedValuesFound = contains(matchedIncomingHeaderValues, item)
-			if allowedValuesFound == false {
+			if !allowedValuesFound {
 				return allowedValuesFound
 			}
 		}
@@ -37,7 +38,7 @@ func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, 
 	if incomingMatchesAllowed(r.Allowed, req.Header) {
 		return r.Wrapped.RoundTrip(req)
 	}
-	return newError(http.StatusUnauthorized, "missing required LDAP group"), nil
+	return newError(http.StatusBadRequest, "missing required header value"), fmt.Errorf("missing required header value")
 }
 
 // ValidateHeaderConfig is used to configure authorization based on ldap group membership sent in a header
@@ -53,7 +54,7 @@ func (*ValidateHeaderConfig) Name() string {
 // ValidateHeaderConfigComponent is a plugin
 type ValidateHeaderConfigComponent struct{}
 
-// ValidateAuthHeaders satisfies the NewComponent signature
+// ValidateHeaders satisfies the NewComponent signature
 func ValidateHeaders(_ context.Context, _ string, _ string, _ string) (interface{}, error) {
 	return &ValidateHeaderConfigComponent{}, nil
 }
