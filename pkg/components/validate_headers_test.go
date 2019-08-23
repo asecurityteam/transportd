@@ -1,7 +1,10 @@
 package components
 
 import (
+	"fmt"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"net/http"
 	"testing"
 )
 
@@ -20,19 +23,19 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 			wantResult: true,
 		},
 		{
-			name: "good incoming header values with single required header value",
+			name: "good single incoming header value",
 			allowedHeader: map[string][]string{"LDAP-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"LDAP-Groups": {"sre", "devs"}},
 			wantResult: true,
 		},
 		{
-			name: "bad incoming header values",
+			name: "incorrect incoming header value",
 			allowedHeader: defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"LDAP-Groups": {"design"}},
 			wantResult: false,
 		},
 		{
-			name: "missing incoming header",
+			name: "missing specific incoming header",
 			allowedHeader: defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"meh": {"sre", "devs"}},
 			wantResult: false,
@@ -98,5 +101,52 @@ func Test_contains(t *testing.T) {
 }
 
 func Test_validateHeadersRoundTrip(t *testing.T) {
-	assert.Equal(t, true, true)
+	tests := []struct{
+		name string
+		allowedHeaders map[string][]string
+		testHeaders http.Header
+		wantErr bool
+		wantResponse int
+	}{
+		{
+			name: "valid header and values present",
+			allowedHeaders: map[string][]string{"client": {"browser", "mobile"}},
+			testHeaders: http.Header{
+				"client": {"mobile"},
+			},
+			wantErr: false,
+			wantResponse: http.StatusOK,
+		},
+		{
+			name: "missing allowed header value",
+			allowedHeaders: map[string][]string{"client": {"browser", "mobile"}},
+			testHeaders: http.Header{
+				"client": {"telnet"},
+			},
+			wantErr: true,
+			wantResponse: http.StatusUnauthorized,
+		},
+	}
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	rt := NewMockRoundTripper(ctrl)
+	c := &validateHeaderTransport{
+		Wrapped: rt,
+		Allowed: map[string][]string{"client": {"browser", "mobile"}},
+	}
+	r := &http.Request{Header: http.Header{
+		"client": {"mobile"},
+	}}
+	rt.EXPECT().RoundTrip(gomock.Any()).Return(
+		&http.Response{
+			Status: "200 OK",
+			StatusCode: http.StatusOK,
+			Body: http.NoBody,
+		},
+		nil,
+	).AnyTimes()
+	got, err := c.RoundTrip(r)
+	fmt.Println(got)
+	assert.NoError(t, err)
 }

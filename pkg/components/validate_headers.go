@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type validateAuthHeaderTransport struct {
+type validateHeaderTransport struct {
 	Wrapped http.RoundTripper
 	Allowed map[string][]string
 }
@@ -33,7 +33,7 @@ func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]s
 	return allowedValuesFound
 }
 
-func (r *validateAuthHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	if incomingMatchesAllowed(r.Allowed, req.Header) {
 		return r.Wrapped.RoundTrip(req)
 	}
@@ -66,7 +66,7 @@ func (*ValidateHeaderConfigComponent) Settings() *ValidateHeaderConfig {
 // New generates the middleware.
 func (*ValidateHeaderConfigComponent) New(_ context.Context, conf *ValidateHeaderConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
-		return &validateAuthHeaderTransport{
+		return &validateHeaderTransport{
 			Wrapped: wrapped,
 			Allowed: conf.Allowed,
 		}
