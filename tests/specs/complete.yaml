@@ -65,6 +65,7 @@ paths:
       x-transportd:
         enabled:
           - "metrics"
+          - "authheaders"
           - "accesslog"
           - "timeout"
           - "hedging"
@@ -73,6 +74,11 @@ paths:
           - "responsevalidation"
           - "strip"
           - "basicauth"
+        authheaders:
+          allowed:
+            x-slauth-user-groups:
+              - "devs-all"
+              - "sre"
         backend: "app"
         timeout:
           after: "175ms"

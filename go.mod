@@ -13,11 +13,10 @@ require (
 	github.com/asecurityteam/httpstats v0.0.0-20190225132931-c2085dfd2a77
 	github.com/asecurityteam/logevent v0.0.0-20190225122144-b32737d8d51c
 	github.com/asecurityteam/runhttp v0.2.0
-	github.com/asecurityteam/settings v0.0.0-20190225125438-79c37a4bd133
+	github.com/asecurityteam/settings v0.1.1-0.20190816180606-5974b79327c0
 	github.com/asecurityteam/transport v0.0.0-20190225122138-b848ebf618ee
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/getkin/kin-openapi v0.0.0-20190729060947-8785b416cb32
-	github.com/go-yaml/yaml v2.1.0+incompatible // indirect
 	github.com/gobuffalo/buffalo-plugins v1.13.0 // indirect
 	github.com/gobuffalo/gogen v0.0.0-20190224213239-1c6076128bbc // indirect
 	github.com/gobuffalo/logger v0.0.0-20190224201004-be78ebfea0fa // indirect
