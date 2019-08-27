@@ -74,7 +74,7 @@ paths:
           - "responsevalidation"
           - "strip"
           - "basicauth"
-        authheaders:
+        validateheaders:
           allowed:
             x-slauth-user-groups:
               - "devs-all"
