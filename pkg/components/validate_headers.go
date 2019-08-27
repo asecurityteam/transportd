@@ -42,7 +42,7 @@ func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, 
 	return r.Wrapped.RoundTrip(req)
 }
 
-// ValidateHeaderConfig is used to configure authorization based on ldap group membership sent in a header
+// ValidateHeaderConfig is used to validate a map of headers and their allowed values against an incoming requests headers
 type ValidateHeaderConfig struct {
 	Allowed map[string][]string `description:"List of allowed headers and "`
 }
