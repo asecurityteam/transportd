@@ -76,9 +76,9 @@ paths:
           - "basicauth"
         validateheaders:
           allowed:
-            x-slauth-user-groups:
-              - "devs-all"
-              - "sre"
+            Accept:
+              - "text/json"
+              - "text/html"
         backend: "app"
         timeout:
           after: "175ms"
