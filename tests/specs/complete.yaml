@@ -75,7 +75,7 @@ paths:
           - "strip"
           - "basicauth"
         validateheaders:
-          allowed:
+          required:
             accept:
               - "text/json"
               - "text/html"
