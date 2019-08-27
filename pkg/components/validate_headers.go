@@ -44,7 +44,7 @@ func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, 
 
 // ValidateHeaderConfig is used to validate a map of headers and their allowed values against an incoming requests headers
 type ValidateHeaderConfig struct {
-	Allowed map[string][]string `description:"List of allowed headers and "`
+	Allowed map[string][]string `description:"List of allowed headers and values"`
 }
 
 // Name of the config root
