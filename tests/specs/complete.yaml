@@ -76,7 +76,7 @@ paths:
           - "basicauth"
         validateheaders:
           allowed:
-            Accept:
+            accept:
               - "text/json"
               - "text/html"
         backend: "app"

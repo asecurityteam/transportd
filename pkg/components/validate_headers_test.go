@@ -9,7 +9,7 @@ import (
 )
 
 func Test_incomingMatchesAllowed(t *testing.T) {
-	defaultAllowedHeaderAndValues := map[string][]string{"LDAP-Groups": {"sre", "devs"}}
+	defaultAllowedHeaderAndValues := map[string][]string{"Ldap-Groups": {"sre", "devs"}}
 	tests := []struct {
 		name           string
 		allowedHeader  map[string][]string
@@ -20,21 +20,21 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 		{
 			name:           "good incoming header values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
-			incomingHeader: map[string][]string{"LDAP-Groups": {"sre", "devs"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
 			wantResult:     true,
 			wantErr:        false,
 		},
 		{
 			name:           "good single incoming header value",
-			allowedHeader:  map[string][]string{"LDAP-Groups": {"devs"}},
-			incomingHeader: map[string][]string{"LDAP-Groups": {"sre", "devs"}},
+			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
 			wantResult:     true,
 			wantErr:        false,
 		},
 		{
 			name:           "incorrect incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
-			incomingHeader: map[string][]string{"LDAP-Groups": {"design"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"design"}},
 			wantResult:     false,
 			wantErr:        true,
 		},
@@ -48,7 +48,7 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 		{
 			name:           "missing single incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
-			incomingHeader: map[string][]string{"LDAP-Groups": {"devs"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
 			wantResult:     false,
 			wantErr:        true,
 		},
@@ -121,7 +121,7 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			name:           "valid header and values present",
 			allowedHeaders: map[string][]string{"client": {"mobile"}},
 			testHeaders: http.Header{
-				"client": {"mobile", "browser"},
+				"Client": {"mobile", "browser"},
 			},
 			wantErr:      false,
 			wantResponse: http.StatusOK,
@@ -130,7 +130,7 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			name:           "missing allowed header value",
 			allowedHeaders: map[string][]string{"client": {"browser"}},
 			testHeaders: http.Header{
-				"client": {"telnet"},
+				"Client": {"telnet"},
 			},
 			wantErr:      true,
 			wantResponse: http.StatusBadRequest,

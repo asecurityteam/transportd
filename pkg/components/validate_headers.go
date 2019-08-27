@@ -23,7 +23,7 @@ func contains(s []string, target string) bool {
 func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) (bool, error) {
 	allowedValuesFound := false
 	for allowedKey, allowedValues := range allowed {
-		matchedIncomingHeaderValues := incoming[allowedKey]
+		matchedIncomingHeaderValues := incoming[http.CanonicalHeaderKey(allowedKey)]
 		for _, item := range allowedValues {
 			allowedValuesFound = contains(matchedIncomingHeaderValues, item)
 			if !allowedValuesFound {
