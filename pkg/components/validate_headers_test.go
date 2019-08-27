@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_incomingMatchesAllowed(t *testing.T) {
@@ -62,9 +62,9 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			matchedResult, err := incomingMatchesAllowed(tt.allowedHeader, tt.incomingHeader)
-			assert.Equal(t, tt.wantErr, err != nil)
-			assert.Equal(t, matchedResult, tt.wantResult)
+			matchedResult, err := incomingMatchesRequired(tt.allowedHeader, tt.incomingHeader)
+			require.Equal(t, tt.wantErr, err != nil)
+			require.Equal(t, matchedResult, tt.wantResult)
 		})
 	}
 }
@@ -104,7 +104,7 @@ func Test_contains(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, contains(tt.sliceToCheck, tt.target), tt.wantResult)
+			require.Equal(t, contains(tt.sliceToCheck, tt.target), tt.wantResult)
 		})
 	}
 }
@@ -143,8 +143,8 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			defer ctrl.Finish()
 			rt := NewMockRoundTripper(ctrl)
 			c := &validateHeaderTransport{
-				Wrapped: rt,
-				Allowed: tt.allowedHeaders,
+				Wrapped:  rt,
+				Required: tt.allowedHeaders,
 			}
 			r := &http.Request{Header: tt.testHeaders}
 			rt.EXPECT().RoundTrip(gomock.Any()).Return(
@@ -156,8 +156,8 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 				nil,
 			).AnyTimes()
 			got, err := c.RoundTrip(r)
-			assert.Equal(t, err != nil, tt.wantErr)
-			assert.Equal(t, tt.wantResponse, got.StatusCode)
+			require.Equal(t, err != nil, tt.wantErr)
+			require.Equal(t, tt.wantResponse, got.StatusCode)
 		})
 	}
 }

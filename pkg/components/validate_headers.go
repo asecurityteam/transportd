@@ -7,8 +7,8 @@ import (
 )
 
 type validateHeaderTransport struct {
-	Wrapped http.RoundTripper
-	Allowed map[string][]string
+	Wrapped  http.RoundTripper
+	Required map[string][]string
 }
 
 func contains(s []string, target string) bool {
@@ -20,31 +20,31 @@ func contains(s []string, target string) bool {
 	return false
 }
 
-func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) (bool, error) {
-	allowedValuesFound := false
-	for allowedKey, allowedValues := range allowed {
-		matchedIncomingHeaderValues := incoming[http.CanonicalHeaderKey(allowedKey)]
-		for _, item := range allowedValues {
-			allowedValuesFound = contains(matchedIncomingHeaderValues, item)
-			if !allowedValuesFound {
-				return allowedValuesFound, fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", allowedKey, allowedValues, matchedIncomingHeaderValues)
+func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]string) (bool, error) {
+	requiredValuesFound := false
+	for requiredKey, requiredValues := range allowed {
+		matchedIncomingHeaderValues := incoming[http.CanonicalHeaderKey(requiredKey)]
+		for _, item := range requiredValues {
+			requiredValuesFound = contains(matchedIncomingHeaderValues, item)
+			if !requiredValuesFound {
+				return requiredValuesFound, fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", requiredKey, requiredValues, matchedIncomingHeaderValues)
 			}
 		}
 	}
-	return allowedValuesFound, nil
+	return requiredValuesFound, nil
 }
 
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	resultsMatch, err := incomingMatchesAllowed(r.Allowed, req.Header)
+	resultsMatch, err := incomingMatchesRequired(r.Required, req.Header)
 	if err != nil || !resultsMatch {
 		return newError(http.StatusBadRequest, "header validation failed"), fmt.Errorf("%s", err)
 	}
 	return r.Wrapped.RoundTrip(req)
 }
 
-// ValidateHeaderConfig is used to validate a map of headers and their allowed values against an incoming requests headers
+// ValidateHeaderConfig is used to validate a map of headers and their required values against an incoming requests headers
 type ValidateHeaderConfig struct {
-	Allowed map[string][]string `description:"Map of allowed headers and their values"`
+	Required map[string][]string `description:"Map of headers to validate and the required values for those headers."`
 }
 
 // Name of the config root
@@ -69,8 +69,8 @@ func (*ValidateHeaderConfigComponent) Settings() *ValidateHeaderConfig {
 func (*ValidateHeaderConfigComponent) New(_ context.Context, conf *ValidateHeaderConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
 		return &validateHeaderTransport{
-			Wrapped: wrapped,
-			Allowed: conf.Allowed,
+			Wrapped:  wrapped,
+			Required: conf.Required,
 		}
 	}, nil
 }
