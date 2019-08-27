@@ -15,47 +15,56 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 		allowedHeader  map[string][]string
 		incomingHeader map[string][]string
 		wantResult     bool
+		wantErr        bool
 	}{
 		{
 			name:           "good incoming header values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"LDAP-Groups": {"sre", "devs"}},
 			wantResult:     true,
+			wantErr:        false,
 		},
 		{
 			name:           "good single incoming header value",
 			allowedHeader:  map[string][]string{"LDAP-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"LDAP-Groups": {"sre", "devs"}},
 			wantResult:     true,
+			wantErr:        false,
 		},
 		{
 			name:           "incorrect incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"LDAP-Groups": {"design"}},
 			wantResult:     false,
+			wantErr:        true,
 		},
 		{
 			name:           "missing specific incoming header",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"meh": {"sre", "devs"}},
 			wantResult:     false,
+			wantErr:        true,
 		},
 		{
 			name:           "missing single incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"LDAP-Groups": {"devs"}},
 			wantResult:     false,
+			wantErr:        true,
 		},
 		{
 			name:           "missing incoming header and values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"": {""}},
 			wantResult:     false,
+			wantErr:        true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, incomingMatchesAllowed(tt.allowedHeader, tt.incomingHeader), tt.wantResult)
+			matchedResult, err := incomingMatchesAllowed(tt.allowedHeader, tt.incomingHeader)
+			assert.Equal(t, tt.wantErr, err != nil)
+			assert.Equal(t, matchedResult, tt.wantResult)
 		})
 	}
 }

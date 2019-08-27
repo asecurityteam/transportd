@@ -20,25 +20,26 @@ func contains(s []string, target string) bool {
 	return false
 }
 
-func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) bool {
+func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) (bool, error) {
 	allowedValuesFound := false
 	for allowedKey, allowedValues := range allowed {
 		matchedIncomingHeaderValues := incoming[allowedKey]
 		for _, item := range allowedValues {
 			allowedValuesFound = contains(matchedIncomingHeaderValues, item)
 			if !allowedValuesFound {
-				return allowedValuesFound
+				return allowedValuesFound, fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", allowedKey, allowedValues, matchedIncomingHeaderValues)
 			}
 		}
 	}
-	return allowedValuesFound
+	return allowedValuesFound, nil
 }
 
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	if incomingMatchesAllowed(r.Allowed, req.Header) {
-		return r.Wrapped.RoundTrip(req)
+	resultsMatch, err := incomingMatchesAllowed(r.Allowed, req.Header)
+	if err != nil || !resultsMatch {
+		return newError(http.StatusBadRequest, "header validation failed"), fmt.Errorf("%s", err)
 	}
-	return newError(http.StatusBadRequest, "missing required header value"), fmt.Errorf("missing required header value")
+	return r.Wrapped.RoundTrip(req)
 }
 
 // ValidateHeaderConfig is used to configure authorization based on ldap group membership sent in a header
@@ -48,7 +49,7 @@ type ValidateHeaderConfig struct {
 
 // Name of the config root
 func (*ValidateHeaderConfig) Name() string {
-	return "authheaders"
+	return "validateheaders"
 }
 
 // ValidateHeaderConfigComponent is a plugin

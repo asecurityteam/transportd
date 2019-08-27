@@ -65,7 +65,7 @@ paths:
       x-transportd:
         enabled:
           - "metrics"
-          - "authheaders"
+          - "validateheaders"
           - "accesslog"
           - "timeout"
           - "hedging"
