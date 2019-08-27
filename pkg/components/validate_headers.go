@@ -37,7 +37,7 @@ func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	resultsMatch, err := incomingMatchesRequired(r.Required, req.Header)
 	if err != nil || !resultsMatch {
-		return newError(http.StatusBadRequest, "header validation failed"), fmt.Errorf("%s", err)
+		return newError(http.StatusBadRequest, fmt.Sprintf("header validation failed due to: %s", err)), nil
 	}
 	return r.Wrapped.RoundTrip(req)
 }

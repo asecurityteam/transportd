@@ -132,7 +132,7 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			testHeaders: http.Header{
 				"Client": {"telnet"},
 			},
-			wantErr:      true,
+			wantErr:      false,
 			wantResponse: http.StatusBadRequest,
 		},
 	}
