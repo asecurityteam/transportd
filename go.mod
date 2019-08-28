@@ -13,7 +13,7 @@ require (
 	github.com/asecurityteam/httpstats v0.0.0-20190225132931-c2085dfd2a77
 	github.com/asecurityteam/logevent v0.0.0-20190225122144-b32737d8d51c
 	github.com/asecurityteam/runhttp v0.2.0
-	github.com/asecurityteam/settings v0.1.1-0.20190816180606-5974b79327c0
+	github.com/asecurityteam/settings v0.3.0
 	github.com/asecurityteam/transport v0.0.0-20190225122138-b848ebf618ee
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/getkin/kin-openapi v0.0.0-20190729060947-8785b416cb32

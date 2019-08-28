@@ -38,6 +38,8 @@ github.com/asecurityteam/settings v0.0.0-20190225125438-79c37a4bd133 h1:d/GqrQHr
 github.com/asecurityteam/settings v0.0.0-20190225125438-79c37a4bd133/go.mod h1:Wb6bajm1AgHtjLP8ecv7RqUTCX1hvrIhgX4sF3Ras8c=
 github.com/asecurityteam/settings v0.1.1-0.20190816180606-5974b79327c0 h1:9aPvJsSqVeYwM9J8dgZvytqFlKm/ioJa06J9hEp2XZI=
 github.com/asecurityteam/settings v0.1.1-0.20190816180606-5974b79327c0/go.mod h1:frhlF5kT7WvdiRX3eQlCOjSppbYUfxxjM9xKTvYjcGo=
+github.com/asecurityteam/settings v0.3.0 h1:hq89btfQhpcUsxm1NpLq8YAu8O/LjDGqCPfACAEfjDU=
+github.com/asecurityteam/settings v0.3.0/go.mod h1:frhlF5kT7WvdiRX3eQlCOjSppbYUfxxjM9xKTvYjcGo=
 github.com/asecurityteam/transport v0.0.0-20190225122138-b848ebf618ee h1:pcVkgdO6BYvnOX/mJLDogdPnMq0XaEpJLtsOhHUiZKA=
 github.com/asecurityteam/transport v0.0.0-20190225122138-b848ebf618ee/go.mod h1:0OVTikRn0uMRQsFsslN4ozUaD5YaRPUpqHTBzTsOtaM=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
