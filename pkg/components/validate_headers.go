@@ -20,23 +20,21 @@ func contains(s []string, target string) bool {
 	return false
 }
 
-func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]string) (bool, error) {
-	requiredValuesFound := false
+func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]string) error {
 	for requiredKey, requiredValues := range allowed {
 		matchedIncomingHeaderValues := incoming[http.CanonicalHeaderKey(requiredKey)]
 		for _, item := range requiredValues {
-			requiredValuesFound = contains(matchedIncomingHeaderValues, item)
-			if !requiredValuesFound {
-				return requiredValuesFound, fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", requiredKey, requiredValues, matchedIncomingHeaderValues)
+			if !contains(matchedIncomingHeaderValues, item) {
+				return fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", requiredKey, requiredValues, matchedIncomingHeaderValues)
 			}
 		}
 	}
-	return requiredValuesFound, nil
+	return nil
 }
 
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	resultsMatch, err := incomingMatchesRequired(r.Required, req.Header)
-	if err != nil || !resultsMatch {
+	err := incomingMatchesRequired(r.Required, req.Header)
+	if err != nil {
 		return newError(http.StatusBadRequest, fmt.Sprintf("header validation failed due to: %s", err)), nil
 	}
 	return r.Wrapped.RoundTrip(req)

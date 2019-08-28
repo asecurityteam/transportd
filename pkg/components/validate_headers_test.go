@@ -62,9 +62,8 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			matchedResult, err := incomingMatchesRequired(tt.allowedHeader, tt.incomingHeader)
+			err := incomingMatchesRequired(tt.allowedHeader, tt.incomingHeader)
 			require.Equal(t, tt.wantErr, err != nil)
-			require.Equal(t, matchedResult, tt.wantResult)
 		})
 	}
 }
