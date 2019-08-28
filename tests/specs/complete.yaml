@@ -65,6 +65,7 @@ paths:
       x-transportd:
         enabled:
           - "metrics"
+          - "validateheaders"
           - "accesslog"
           - "timeout"
           - "hedging"
@@ -73,6 +74,11 @@ paths:
           - "responsevalidation"
           - "strip"
           - "basicauth"
+        validateheaders:
+          required:
+            accept:
+              - "text/json"
+              - "text/html"
         backend: "app"
         timeout:
           after: "175ms"
