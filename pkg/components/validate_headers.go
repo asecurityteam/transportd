@@ -7,8 +7,8 @@ import (
 )
 
 type validateHeaderTransport struct {
-	Wrapped  http.RoundTripper
-	Required map[string][]string
+	Wrapped http.RoundTripper
+	Allowed map[string][]string
 }
 
 func contains(s []string, target string) bool {
@@ -20,7 +20,7 @@ func contains(s []string, target string) bool {
 	return false
 }
 
-func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]string) error {
+func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) error {
 	checkedHeaderAndValues := make(map[string][]string)
 	for allowedKey, allowedValues := range allowed {
 		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedKey)]; present {
@@ -36,7 +36,7 @@ func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]
 }
 
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	err := incomingMatchesRequired(r.Required, req.Header)
+	err := incomingMatchesAllowed(r.Allowed, req.Header)
 	if err != nil {
 		return newError(http.StatusBadRequest, fmt.Sprintf("header validation failed due to: %s", err)), nil
 	}
@@ -45,7 +45,7 @@ func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, 
 
 // ValidateHeaderConfig is used to validate a map of headers and their allowed values against an incoming requests headers
 type ValidateHeaderConfig struct {
-	Required map[string][]string `description:"Map of headers to validate and the allowed values for those headers."`
+	Allowed map[string][]string `description:"Map of headers to validate and the allowed values for those headers."`
 }
 
 // Name of the config root
@@ -70,8 +70,8 @@ func (*ValidateHeaderConfigComponent) Settings() *ValidateHeaderConfig {
 func (*ValidateHeaderConfigComponent) New(_ context.Context, conf *ValidateHeaderConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
 	return func(wrapped http.RoundTripper) http.RoundTripper {
 		return &validateHeaderTransport{
-			Wrapped:  wrapped,
-			Required: conf.Required,
+			Wrapped: wrapped,
+			Allowed: conf.Allowed,
 		}
 	}, nil
 }
