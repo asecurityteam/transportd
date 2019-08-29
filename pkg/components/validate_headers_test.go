@@ -18,16 +18,30 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 		wantErr        bool
 	}{
 		{
-			name:           "good incoming header values",
+			name:           "multiple incoming header values with multiple allowed values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
 			wantResult:     true,
 			wantErr:        false,
 		},
 		{
-			name:           "good single incoming header value",
+			name:           "multiple incoming header values with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
+			wantResult:     true,
+			wantErr:        false,
+		},
+		{
+			name:           "single incoming header value with multiple allowed values",
+			allowedHeader:  defaultAllowedHeaderAndValues,
+			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
+			wantResult:     true,
+			wantErr:        false,
+		},
+		{
+			name:           "single incoming header value with a single allowed value",
+			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
 			wantResult:     true,
 			wantErr:        false,
 		},
@@ -42,13 +56,6 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 			name:           "missing specific incoming header",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"meh": {"sre", "devs"}},
-			wantResult:     false,
-			wantErr:        true,
-		},
-		{
-			name:           "missing single incoming header value",
-			allowedHeader:  defaultAllowedHeaderAndValues,
-			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
 			wantResult:     false,
 			wantErr:        true,
 		},

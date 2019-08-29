@@ -21,19 +21,18 @@ func contains(s []string, target string) bool {
 }
 
 func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]string) error {
-	matchedValueFound := false
+	checkedHeaderAndValues := make(map[string][]string)
 	for requiredKey, requiredValues := range allowed {
-		matchedIncomingHeaderValues := incoming[http.CanonicalHeaderKey(requiredKey)]
-		for _, item := range requiredValues {
-			if contains(matchedIncomingHeaderValues, item) {
-				return nil
+		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(requiredKey)]; present {
+			for _, item := range requiredValues {
+				checkedHeaderAndValues[requiredKey] = append(checkedHeaderAndValues[requiredKey], item)
+				if contains(matchedIncomingHeaderValues, item) {
+					return nil
+				}
 			}
 		}
 	}
-	if !matchedValueFound {
-		return fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", requiredKey, requiredValues, matchedIncomingHeaderValues)
-	}
-	return nil
+	return fmt.Errorf("no matching values for headers: %s. given matching headers and values: %s", allowed, checkedHeaderAndValues)
 }
 
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
