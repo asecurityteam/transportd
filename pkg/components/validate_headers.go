@@ -21,13 +21,17 @@ func contains(s []string, target string) bool {
 }
 
 func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]string) error {
+	matchedValueFound := false
 	for requiredKey, requiredValues := range allowed {
 		matchedIncomingHeaderValues := incoming[http.CanonicalHeaderKey(requiredKey)]
 		for _, item := range requiredValues {
-			if !contains(matchedIncomingHeaderValues, item) {
-				return fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", requiredKey, requiredValues, matchedIncomingHeaderValues)
+			if contains(matchedIncomingHeaderValues, item) {
+				return nil
 			}
 		}
+	}
+	if !matchedValueFound {
+		return fmt.Errorf("no matching values for header %s. given values %v. acceptable values %v", requiredKey, requiredValues, matchedIncomingHeaderValues)
 	}
 	return nil
 }
