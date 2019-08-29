@@ -69,7 +69,7 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := incomingMatchesRequired(tt.allowedHeader, tt.incomingHeader)
+			err := incomingMatchesAllowed(tt.allowedHeader, tt.incomingHeader)
 			require.Equal(t, tt.wantErr, err != nil)
 		})
 	}
@@ -149,8 +149,8 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			defer ctrl.Finish()
 			rt := NewMockRoundTripper(ctrl)
 			c := &validateHeaderTransport{
-				Wrapped:  rt,
-				Required: tt.allowedHeaders,
+				Wrapped: rt,
+				Allowed: tt.allowedHeaders,
 			}
 			r := &http.Request{Header: tt.testHeaders}
 			rt.EXPECT().RoundTrip(gomock.Any()).Return(
