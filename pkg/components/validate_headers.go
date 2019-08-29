@@ -22,10 +22,10 @@ func contains(s []string, target string) bool {
 
 func incomingMatchesRequired(allowed map[string][]string, incoming map[string][]string) error {
 	checkedHeaderAndValues := make(map[string][]string)
-	for requiredKey, requiredValues := range allowed {
-		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(requiredKey)]; present {
-			for _, item := range requiredValues {
-				checkedHeaderAndValues[requiredKey] = append(checkedHeaderAndValues[requiredKey], item)
+	for allowedKey, allowedValues := range allowed {
+		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedKey)]; present {
+			for _, item := range allowedValues {
+				checkedHeaderAndValues[allowedKey] = append(checkedHeaderAndValues[allowedKey], item)
 				if contains(matchedIncomingHeaderValues, item) {
 					return nil
 				}
@@ -43,9 +43,9 @@ func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, 
 	return r.Wrapped.RoundTrip(req)
 }
 
-// ValidateHeaderConfig is used to validate a map of headers and their required values against an incoming requests headers
+// ValidateHeaderConfig is used to validate a map of headers and their allowed values against an incoming requests headers
 type ValidateHeaderConfig struct {
-	Required map[string][]string `description:"Map of headers to validate and the required values for those headers."`
+	Required map[string][]string `description:"Map of headers to validate and the allowed values for those headers."`
 }
 
 // Name of the config root
