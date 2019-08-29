@@ -46,6 +46,13 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 			wantErr:        false,
 		},
 		{
+			name:           "single incoming header with a single allowed value and multiple allowed headers",
+			allowedHeader:  map[string][]string{"Ldap-Groups": {"sre"}, "Client": {"mobile"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"sre"}},
+			wantResult:     true,
+			wantErr:        false,
+		},
+		{
 			name:           "incorrect incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"design"}},
