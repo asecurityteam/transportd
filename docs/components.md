@@ -12,7 +12,7 @@ and if the configured value exists. If it can't find any configured header or co
 This makes the plugin flexible to check for the presence of any header values combination. It does not currently do strict matching
 if you want to validate that *multiple* values exist.
 
-Example: This configuration would verify that a header named `LdapGroups` exists and that it has any of the listed values `hr` or `pm`.
+Example: This configuration would verify that a header named `Ldap-Groups` exists and that it has any of the listed values `hr` or `pm`.
 ```yaml
 validateheaders:
   allowed:
@@ -22,7 +22,7 @@ validateheaders:
 ```
 
 
-Example: This configuration would verify that a header named `LdapGroups` or `Username` exists with any of the listed values for that header.
+Example: This configuration would verify that a header named `Ldap-Groups` or `Username` exists with any of the listed values for that header.
 ```yaml
 validateheaders:
   allowed:
