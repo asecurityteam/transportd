@@ -4,7 +4,7 @@ This page will document some of the custom components of transportd and how they
 ##### Validate Headers
 
 The `validate_headers` component can be used to validate the presence of headers and the existence of specific values in those headers.
-It verifies that *any* of the specified headers exist with *any* of the specified values for that header. Each key under `allowed`
+It verifies that at least one specified header contains at least one specified value. Each key under `allowed`
 is the header name and the list of values for that key represent the the values we want to verify exist.
 
 If a configured header does not exist, or the specified value is not found, it will check for the next `allowed` header, if configured,
