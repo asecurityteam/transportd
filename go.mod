@@ -5,6 +5,7 @@ go 1.12
 require (
 	bitbucket.org/atlassian/go-asap v0.0.0-20181018222415-d78e91e20cfa
 	github.com/SermoDigital/jose v0.9.2-0.20161205224733-f6df55f235c2
+	github.com/apache/thrift v0.12.0 // indirect
 	github.com/asecurityteam/component-connstate v0.1.0 // indirect
 	github.com/asecurityteam/component-expvar v0.1.0 // indirect
 	github.com/asecurityteam/component-log v0.1.0 // indirect
