@@ -13,6 +13,7 @@
         - [Route Settings](#route-settings)
         - [Environment Variables](#environment-variables)
     - [Custom Plugins And Builds](#custom-plugins-and-builds)
+        - [Custom Components](#custom-components)
         - [Writing A Component](#writing-a-component)
         - [Generating A Build](#generating-a-build)
     - [Using As A Library](#using-as-a-library)
