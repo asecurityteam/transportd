@@ -18,16 +18,37 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 		wantErr        bool
 	}{
 		{
-			name:           "good incoming header values",
+			name:           "multiple incoming header values with multiple allowed values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
 			wantResult:     true,
 			wantErr:        false,
 		},
 		{
-			name:           "good single incoming header value",
+			name:           "multiple incoming header values with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
+			wantResult:     true,
+			wantErr:        false,
+		},
+		{
+			name:           "single incoming header value with multiple allowed values",
+			allowedHeader:  defaultAllowedHeaderAndValues,
+			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
+			wantResult:     true,
+			wantErr:        false,
+		},
+		{
+			name:           "single incoming header value with a single allowed value",
+			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
+			wantResult:     true,
+			wantErr:        false,
+		},
+		{
+			name:           "single incoming header with a single allowed value and multiple allowed headers",
+			allowedHeader:  map[string][]string{"Ldap-Groups": {"sre"}, "Client": {"mobile"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"sre"}},
 			wantResult:     true,
 			wantErr:        false,
 		},
@@ -46,13 +67,6 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 			wantErr:        true,
 		},
 		{
-			name:           "missing single incoming header value",
-			allowedHeader:  defaultAllowedHeaderAndValues,
-			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
-			wantResult:     false,
-			wantErr:        true,
-		},
-		{
 			name:           "missing incoming header and values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"": {""}},
@@ -62,7 +76,7 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := incomingMatchesRequired(tt.allowedHeader, tt.incomingHeader)
+			err := incomingMatchesAllowed(tt.allowedHeader, tt.incomingHeader)
 			require.Equal(t, tt.wantErr, err != nil)
 		})
 	}
@@ -142,8 +156,8 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			defer ctrl.Finish()
 			rt := NewMockRoundTripper(ctrl)
 			c := &validateHeaderTransport{
-				Wrapped:  rt,
-				Required: tt.allowedHeaders,
+				Wrapped: rt,
+				Allowed: tt.allowedHeaders,
 			}
 			r := &http.Request{Header: tt.testHeaders}
 			rt.EXPECT().RoundTrip(gomock.Any()).Return(

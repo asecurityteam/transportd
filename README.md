@@ -13,6 +13,7 @@
         - [Route Settings](#route-settings)
         - [Environment Variables](#environment-variables)
     - [Custom Plugins And Builds](#custom-plugins-and-builds)
+        - [Custom Components](#custom-components)
         - [Writing A Component](#writing-a-component)
         - [Generating A Build](#generating-a-build)
     - [Using As A Library](#using-as-a-library)
@@ -263,6 +264,12 @@ Unfortunately, go does not have good support for dynamic loading of plugins and 
 alternatives to the standard library `plugin` package all require some form of
 multi-processing and RPC. Because of this, adding features beyond the core set
 requires creating a custom build of this project.
+
+<a id="custom-components" name="custom-components"></a>
+### Custom Components
+
+Documentation for custom components that handle things such as header validation can be found at [docs/components.md](docs/components.md)
+
 
 <a id="markdown-writing-a-component" name="writing-a-component"></a>
 ### Writing A Component
