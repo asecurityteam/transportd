@@ -59,9 +59,15 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 			wantErr:        false,
 		},
 		{
-			name:           "incorrect incoming header value",
+			name:           "single incorrect incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"design"}},
+			wantErr:        true,
+		},
+		{
+			name:           "multiple incorrect incoming header values with multiple allowed values",
+			allowedHeader:  defaultAllowedHeaderAndValues,
+			incomingHeader: map[string][]string{"Ldap-Groups": {"design", "finance"}},
 			wantErr:        true,
 		},
 		{
@@ -138,6 +144,18 @@ func Test_contains(t *testing.T) {
 		{
 			name:         "target is not present in a slice with multiple values separated by a comma",
 			sliceToCheck: []string{"cat,dog", "fish,chicken"},
+			target:       "bird",
+			wantResult:   false,
+		},
+		{
+			name:         "target is present in a slice with multiple values separated by a comma and a space",
+			sliceToCheck: []string{"cat, dog", "fish, chicken"},
+			target:       "dog",
+			wantResult:   true,
+		},
+		{
+			name:         "target is not present in a slice with multiple values separated by a comma and a space",
+			sliceToCheck: []string{"cat, dog", "fish, chicken"},
 			target:       "bird",
 			wantResult:   false,
 		},

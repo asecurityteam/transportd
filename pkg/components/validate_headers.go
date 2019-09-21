@@ -16,7 +16,7 @@ func contains(s []string, target string) bool {
 	for _, c := range s {
 		// handle case where a header value is a comma separated list
 		for _, value := range strings.Split(c, ",") {
-			if target == value {
+			if target == strings.TrimSpace(value) {
 				return true
 			}
 		}
