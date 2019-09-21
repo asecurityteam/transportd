@@ -14,63 +14,66 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 		name           string
 		allowedHeader  map[string][]string
 		incomingHeader map[string][]string
-		wantResult     bool
 		wantErr        bool
 	}{
 		{
 			name:           "multiple incoming header values with multiple allowed values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
-			wantResult:     true,
 			wantErr:        false,
 		},
 		{
 			name:           "multiple incoming header values with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
-			wantResult:     true,
+			wantErr:        false,
+		},
+		{
+			name:           "multiple incoming header values separated by a comma with a single allowed value",
+			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"sre,ops", "security,devs"}},
+			wantErr:        false,
+		},
+		{
+			name:           "single incoming header value separated by a comma with a single allowed value",
+			allowedHeader:  map[string][]string{"Ldap-Groups": {"ops"}},
+			incomingHeader: map[string][]string{"Ldap-Groups": {"security,ops"}},
 			wantErr:        false,
 		},
 		{
 			name:           "single incoming header value with multiple allowed values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
-			wantResult:     true,
 			wantErr:        false,
 		},
 		{
 			name:           "single incoming header value with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
-			wantResult:     true,
 			wantErr:        false,
 		},
 		{
 			name:           "single incoming header with a single allowed value and multiple allowed headers",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"sre"}, "Client": {"mobile"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre"}},
-			wantResult:     true,
 			wantErr:        false,
 		},
 		{
 			name:           "incorrect incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"design"}},
-			wantResult:     false,
 			wantErr:        true,
 		},
 		{
 			name:           "missing specific incoming header",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"meh": {"sre", "devs"}},
-			wantResult:     false,
 			wantErr:        true,
 		},
 		{
 			name:           "missing incoming header and values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"": {""}},
-			wantResult:     false,
 			wantErr:        true,
 		},
 	}
@@ -113,6 +116,30 @@ func Test_contains(t *testing.T) {
 			sliceToCheck: []string{"dog"},
 			target:       "dog",
 			wantResult:   true,
+		},
+		{
+			name:         "target is present in a slice with values separated by a comma",
+			sliceToCheck: []string{"cat,dog"},
+			target:       "dog",
+			wantResult:   true,
+		},
+		{
+			name:         "target is not present in a slice with values separated by a comma",
+			sliceToCheck: []string{"cat,dog"},
+			target:       "fish",
+			wantResult:   false,
+		},
+		{
+			name:         "target is present in a slice with multiple values separated by a comma",
+			sliceToCheck: []string{"cat,dog", "fish,chicken"},
+			target:       "dog",
+			wantResult:   true,
+		},
+		{
+			name:         "target is not present in a slice with multiple values separated by a comma",
+			sliceToCheck: []string{"cat,dog", "fish,chicken"},
+			target:       "bird",
+			wantResult:   false,
 		},
 	}
 	for _, tt := range tests {

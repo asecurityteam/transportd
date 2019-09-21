@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 type validateHeaderTransport struct {
@@ -13,8 +14,11 @@ type validateHeaderTransport struct {
 
 func contains(s []string, target string) bool {
 	for _, c := range s {
-		if target == c {
-			return true
+		// handle case where a header value is a comma separated list
+		for _, value := range strings.Split(c, ",") {
+			if target == value {
+				return true
+			}
 		}
 	}
 	return false
@@ -23,8 +27,11 @@ func contains(s []string, target string) bool {
 func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) error {
 	checkedHeaderAndValues := make(map[string][]string)
 	for allowedKey, allowedValues := range allowed {
+		// check if incoming header values have a configured allowed header present and search through them if so
 		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedKey)]; present {
+			// iterate through configured allowed values for a header
 			for _, item := range allowedValues {
+				// keep track of headers we have checked to return in the response if none are found
 				checkedHeaderAndValues[allowedKey] = append(checkedHeaderAndValues[allowedKey], item)
 				if contains(matchedIncomingHeaderValues, item) {
 					return nil
