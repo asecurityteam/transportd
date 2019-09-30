@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -84,7 +85,7 @@ func TestNewClientFactoryFailedComponentFactoryError(t *testing.T) {
 	defer ctrl.Finish()
 
 	ctx := context.Background()
-	rt := NewMockRoundTripper(ctrl)
+	rt := NewMockBackend(ctrl)
 	comp := &cfComponent{AdaptErr: errors.New("")}
 	br := NewMockBackendRegistry(ctrl)
 	s := NewMockSource(ctrl)
@@ -105,7 +106,7 @@ func TestNewClientFactoryFailedComponentLoadError(t *testing.T) {
 	defer ctrl.Finish()
 
 	ctx := context.Background()
-	rt := NewMockRoundTripper(ctrl)
+	rt := NewMockBackend(ctrl)
 	comp := &cfComponent{Err: errors.New("")}
 	br := NewMockBackendRegistry(ctrl)
 	s := NewMockSource(ctrl)
@@ -127,7 +128,8 @@ func TestNewClientFactoryFailedComponentMissing(t *testing.T) {
 	defer ctrl.Finish()
 
 	ctx := context.Background()
-	rt := NewMockRoundTripper(ctrl)
+	rt := NewMockBackend(ctrl)
+	u, _ := url.Parse("https://127.0.0.1")
 	comp := &cfComponent{}
 	br := NewMockBackendRegistry(ctrl)
 	s := NewMockSource(ctrl)
@@ -139,6 +141,7 @@ func TestNewClientFactoryFailedComponentMissing(t *testing.T) {
 	s.EXPECT().Get(ctx, ExtensionKey, enabledSetting).Return([]string{cfComponentName, "t"}, true)
 	s.EXPECT().Get(ctx, ExtensionKey, backendSetting).Return("", true)
 	br.EXPECT().Load(ctx, "").Return(rt)
+	rt.EXPECT().Host().Return(u).AnyTimes()
 	_, err := cf.New(ctx, s, "", "")
 	assert.NotNil(t, err)
 }
@@ -148,7 +151,8 @@ func TestNewClientFactorySuccess(t *testing.T) {
 	defer ctrl.Finish()
 
 	ctx := context.Background()
-	rt := NewMockRoundTripper(ctrl)
+	rt := NewMockBackend(ctrl)
+	u, _ := url.Parse("https://127.0.0.1")
 	comp := &cfComponent{}
 	br := NewMockBackendRegistry(ctrl)
 	s := NewMockSource(ctrl)
@@ -160,6 +164,7 @@ func TestNewClientFactorySuccess(t *testing.T) {
 	s.EXPECT().Get(ctx, ExtensionKey, enabledSetting).Return([]string{cfComponentName}, true)
 	s.EXPECT().Get(ctx, ExtensionKey, backendSetting).Return("", true)
 	br.EXPECT().Load(ctx, "").Return(rt)
+	rt.EXPECT().Host().Return(u).AnyTimes()
 	s.EXPECT().Get(ctx, ExtensionKey, cfComponentName, "V").Return(1, true)
 	client, err := cf.New(ctx, s, "", "")
 	assert.Nil(t, err)

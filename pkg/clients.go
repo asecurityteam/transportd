@@ -68,7 +68,14 @@ func (f *ClientFactory) New(ctx context.Context, s settings.Source, path string,
 		Source: s,
 		Prefix: []string{ExtensionKey},
 	}
-	chain := make(transport.Chain, 0, len(enabled))
+	chain := make(transport.Chain, 0, len(enabled)+1)
+	chain = append(chain, func(w http.RoundTripper) http.RoundTripper {
+		return &hostRewrite{
+			Wrapped: w,
+			Host:    base.Host().Host,
+			Scheme:  base.Host().Scheme,
+		}
+	})
 	for offset, c := range loadedComponents {
 		cD := new(func(http.RoundTripper) http.RoundTripper)
 		err := settings.NewComponent(ctx, prefixSource, c, cD)
