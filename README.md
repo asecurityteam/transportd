@@ -1,6 +1,6 @@
 <a id="markdown-transportd---http-middleware-as-a-service" name="transportd---http-middleware-as-a-service"></a>
 # transportd - HTTP Middleware As A Service
-
+[![GoDoc](https://godoc.org/github.com/asecurityteam/transportd?status.svg)](https://godoc.org/github.com/asecurityteam/transportd)
 *Status: Incubation*
 
 <!-- TOC -->
