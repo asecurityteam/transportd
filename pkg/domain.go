@@ -3,6 +3,8 @@ package transportd
 import (
 	"context"
 	"net/http"
+	"net/url"
+	"time"
 )
 
 const (
@@ -24,11 +26,20 @@ type ClientRegistry interface {
 	Store(ctx context.Context, path string, method string, rt http.RoundTripper)
 }
 
+// Backend is an extension of http.RoundTripper that give access to relevant
+// features such as the host rewrite data or the connection TTL.
+type Backend interface {
+	http.RoundTripper
+	Host() *url.URL
+	Count() int
+	TTL() time.Duration
+}
+
 // BackendRegistry manages a set of base http.RoundTripper implementations that
 // are composed with other tools in order to create clients.
 type BackendRegistry interface {
-	Load(ctx context.Context, backend string) http.RoundTripper
-	Store(ctx context.Context, backend string, rt http.RoundTripper)
+	Load(ctx context.Context, backend string) Backend
+	Store(ctx context.Context, backend string, rt Backend)
 }
 
 // HTTPError is the canonical shape for all internally generated HTTP error

@@ -31,6 +31,9 @@ func TestHostRewrite(t *testing.T) {
 		assert.Equal(t, req.Host, rt.Host)
 		assert.Equal(t, req.URL.Host, rt.Host)
 		assert.Equal(t, req.URL.Scheme, rt.Scheme)
+		assert.Equal(t, req.RequestURI, "")
+		assert.Equal(t, req.URL.Opaque, "")
+		assert.Equal(t, req.URL.RawPath, "")
 	}).Return(nil, nil)
 	_, _ = rt.RoundTrip(req)
 }

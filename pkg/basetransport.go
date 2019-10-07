@@ -19,6 +19,25 @@ const (
 	poolSetting     = "pool"
 )
 
+type backendWrapper struct {
+	http.RoundTripper
+	host  *url.URL
+	count int
+	ttl   time.Duration
+}
+
+func (b *backendWrapper) Host() *url.URL {
+	return b.host
+}
+
+func (b *backendWrapper) Count() int {
+	return b.count
+}
+
+func (b *backendWrapper) TTL() time.Duration {
+	return b.ttl
+}
+
 // NewBaseTransports generates a mapping of backend names to http.RoundTripper instances.
 // This method is used to handle the top-level x-transportd block and configure a set of
 // base http.RoundTripper instances with some core connection pooling settings applied.
@@ -77,10 +96,11 @@ func NewBaseTransports(ctx context.Context, s settings.Source) (BackendRegistry,
 			transport.RecycleOptionTTLJitter(*poolTTL.DurationValue/time.Duration(5)),
 		)
 		f = transport.NewRotatorFactory(f, transport.RotatorOptionInstances(*poolCount.IntValue))
-		result.Store(ctx, backend, &hostRewrite{
-			Scheme:  hostVal.Scheme,
-			Host:    hostVal.Host,
-			Wrapped: f(),
+		result.Store(ctx, backend, &backendWrapper{
+			RoundTripper: f(),
+			host:         hostVal,
+			count:        *poolCount.IntValue,
+			ttl:          *poolTTL.DurationValue,
 		})
 	}
 	return result, nil
@@ -112,7 +132,18 @@ type hostRewrite struct {
 
 func (r *hostRewrite) RoundTrip(req *http.Request) (*http.Response, error) {
 	req.Host = r.Host
+	// RequestURI is considered an error if set to a non-empty string for client
+	// requests. Since we are converting from server to client we need to blank
+	// this value to remain compliant.
+	req.RequestURI = ""
 	req.URL.Host = r.Host
 	req.URL.Scheme = r.Scheme
+	// Opaque and RawPath are optional fields in all contexts. The default
+	// behavior when they are not defined is to compute the values from the URL
+	// instance. Since we have rewritten key portions of the URL we actually
+	// benefit from allowing these values to be computed rather than using the
+	// stale versions of them.
+	req.URL.Opaque = ""
+	req.URL.RawPath = ""
 	return r.Wrapped.RoundTrip(req)
 }
