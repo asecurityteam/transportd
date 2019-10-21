@@ -238,13 +238,19 @@ x-transportd:
     # (int) Number of URL segments to remove from the beginning of the path before redirect.
     count: 0
   requestheaderinject:
-    # (map[string]string) Map values of header names:values to inject.
-    x-header-1: value1
-    x-header-2: value2
+    # (map[string][]string) Map values of header names:values to inject.
+    headers:
+      x-header-1:
+        - "value1"
+      x-header-2:
+        - "value2"
   responseheaderinject:
-    # (map[string]string) Map values of header names:values to inject.
-    x-header-1: value1
-    x-header-2: value2
+    # (map[string][]string) Map values of header names:values to inject.
+    headers:
+      x-header-1:
+        - "value1"
+      x-header-2:
+        - "value2"
   basicauth:
     # (string) Username to use in HTTP basic authentication.
     username: ""
