@@ -12,15 +12,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRequestHeaderInjectionConfigError(t *testing.T) {
-	cmp := &RequestHeaderComponent{}
-	set := cmp.Settings()
-	set.Names = []string{"one", "two"}
-	set.Values = []string{"one"}
-	_, err := cmp.New(context.Background(), set)
-	assert.Error(t, err)
-}
-
 func TestRequestHeaderInjection(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -28,8 +19,7 @@ func TestRequestHeaderInjection(t *testing.T) {
 	rt := NewMockRoundTripper(ctrl)
 	cmp := &RequestHeaderComponent{}
 	set := cmp.Settings()
-	set.Names = []string{"one", "two", "three"}
-	set.Values = []string{"a", "b", "c"}
+	set.Headers = map[string][]string{"one": {"a"}, "two": {"b"}, "three": {"c"}}
 	d, err := cmp.New(context.Background(), set)
 	assert.NoError(t, err)
 
@@ -52,8 +42,7 @@ func TestResponseHeaderInjection(t *testing.T) {
 	rt := NewMockRoundTripper(ctrl)
 	cmp := &ResponseHeaderComponent{}
 	set := cmp.Settings()
-	set.Names = []string{"one", "two", "three"}
-	set.Values = []string{"a", "b", "c"}
+	set.Headers = map[string][]string{"one": {"a"}, "two": {"b"}, "three": {"c"}}
 	d, err := cmp.New(context.Background(), set)
 	assert.NoError(t, err)
 
@@ -79,4 +68,5 @@ func TestResponseHeaderInjection(t *testing.T) {
 	assert.Equal(t, "b", resp.Header.Get("two"))
 	assert.Equal(t, "c", resp.Header.Get("three"))
 	assert.Equal(t, "d", resp.Header.Get("four"))
+
 }

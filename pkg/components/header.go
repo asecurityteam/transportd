@@ -2,7 +2,6 @@ package components
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/asecurityteam/transport"
@@ -10,8 +9,7 @@ import (
 
 // RequestHeaderConfig configures automated header injection.
 type RequestHeaderConfig struct {
-	Names  []string `description:"List of header names to inject."`
-	Values []string `description:"List of header values to inject."`
+	Headers map[string][]string `description:"Map of headers to inject into requests."`
 }
 
 // Name of the config root.
@@ -29,7 +27,7 @@ func RequestHeader(_ context.Context, _ string, _ string, _ string) (interface{}
 
 // Settings generates a config populated with defaults.
 func (*RequestHeaderComponent) Settings() *RequestHeaderConfig {
-	return &RequestHeaderConfig{Names: []string{}, Values: []string{}}
+	return &RequestHeaderConfig{Headers: make(map[string][]string)}
 }
 
 func makeRequestDecorator(name string, value string) transport.Decorator {
@@ -40,24 +38,24 @@ func makeRequestDecorator(name string, value string) transport.Decorator {
 
 // New generates the middleware.
 func (*RequestHeaderComponent) New(_ context.Context, conf *RequestHeaderConfig) (func(http.RoundTripper) http.RoundTripper, error) { // nolint
-	if len(conf.Names) != len(conf.Values) {
-		return nil, fmt.Errorf(
-			"header mismatch. %d names. %d values. these must match",
-			len(conf.Names),
-			len(conf.Values),
-		)
+
+	length := 0
+	for _, headerValues := range conf.Headers {
+		length = length + len(headerValues)
 	}
-	ch := make(transport.Chain, 0, len(conf.Names))
-	for offset, name := range conf.Names {
-		ch = append(ch, makeRequestDecorator(name, conf.Values[offset]))
+
+	ch := make(transport.Chain, 0, length)
+	for headerName, headerValues := range conf.Headers {
+		for _, headerValue := range headerValues {
+			ch = append(ch, makeRequestDecorator(headerName, headerValue))
+		}
 	}
 	return ch.Apply, nil
 }
 
 // ResponseHeaderConfig configures automated header injection.
 type ResponseHeaderConfig struct {
-	Names  []string `description:"List of header names to inject."`
-	Values []string `description:"List of header values to inject."`
+	Headers map[string][]string `description:"Map of headers to inject into responses."`
 }
 
 // Name of the config root.
@@ -69,13 +67,13 @@ func (*ResponseHeaderConfig) Name() string {
 type ResponseHeaderComponent struct{}
 
 // ResponseHeader satisfies the NewComponent signature.
-func ResponseHeader(_ context.Context, _ string, _ string, _ string) (interface{}, error) {
+func ResponseHeader(_ context.Context, a string, b string, c string) (interface{}, error) {
 	return &ResponseHeaderComponent{}, nil
 }
 
 // Settings generates a config populated with defaults.
 func (*ResponseHeaderComponent) Settings() *ResponseHeaderConfig {
-	return &ResponseHeaderConfig{Names: []string{}, Values: []string{}}
+	return &ResponseHeaderConfig{Headers: make(map[string][]string)}
 }
 
 func makeResponseDecorator(name string, value string) transport.Decorator {
@@ -86,16 +84,17 @@ func makeResponseDecorator(name string, value string) transport.Decorator {
 
 // New generates the middleware.
 func (*ResponseHeaderComponent) New(_ context.Context, conf *ResponseHeaderConfig) (func(http.RoundTripper) http.RoundTripper, error) { // nolint
-	if len(conf.Names) != len(conf.Values) {
-		return nil, fmt.Errorf(
-			"header mismatch. %d names. %d values. these must match",
-			len(conf.Names),
-			len(conf.Values),
-		)
+
+	length := 0
+	for _, headerValues := range conf.Headers {
+		length = length + len(headerValues)
 	}
-	ch := make(transport.Chain, 0, len(conf.Names))
-	for offset, name := range conf.Names {
-		ch = append(ch, makeResponseDecorator(name, conf.Values[offset]))
+
+	ch := make(transport.Chain, 0, length)
+	for headerName, headerValues := range conf.Headers {
+		for _, headerValue := range headerValues {
+			ch = append(ch, makeResponseDecorator(headerName, headerValue))
+		}
 	}
 	return ch.Apply, nil
 }

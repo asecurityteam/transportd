@@ -1,3 +1,4 @@
+<a id="markdown-transportd---http-middleware-as-a-service" name="transportd---http-middleware-as-a-service"></a>
 # transportd - HTTP Middleware As A Service
 [![GoDoc](https://godoc.org/github.com/asecurityteam/transportd?status.svg)](https://godoc.org/github.com/asecurityteam/transportd)
 [![Build Status](https://travis-ci.com/asecurityteam/transportd.png?branch=master)](https://travis-ci.com/asecurityteam/transportd)
@@ -5,7 +6,25 @@
 
 *Status: Incubation*
 
-<!-- TOC -->autoauto- [transportd - HTTP Middleware As A Service](#transportd---http-middleware-as-a-service)auto    - [Overview](#overview)auto    - [Configuration](#configuration)auto        - [Runtime Settings](#runtime-settings)auto        - [Backend Settings](#backend-settings)auto        - [Route Settings](#route-settings)auto        - [Environment Variables](#environment-variables)auto    - [Custom Plugins And Builds](#custom-plugins-and-builds)auto        - [Custom Components](#custom-components)auto        - [Writing A Component](#writing-a-component)auto        - [Generating A Build](#generating-a-build)auto    - [Using As A Library](#using-as-a-library)auto    - [Contributing](#contributing)auto        - [License](#license)auto        - [Contributing Agreement](#contributing-agreement)autoauto<!-- /TOC -->
+<!-- TOC -->
+
+- [transportd - HTTP Middleware As A Service](#transportd---http-middleware-as-a-service)
+    - [Overview](#overview)
+    - [Configuration](#configuration)
+        - [Runtime Settings](#runtime-settings)
+        - [Backend Settings](#backend-settings)
+        - [Route Settings](#route-settings)
+        - [Environment Variables](#environment-variables)
+    - [Custom Plugins And Builds](#custom-plugins-and-builds)
+        - [Custom Components](#custom-components)
+        - [Writing A Component](#writing-a-component)
+        - [Generating A Build](#generating-a-build)
+    - [Using As A Library](#using-as-a-library)
+    - [Contributing](#contributing)
+        - [License](#license)
+        - [Contributing Agreement](#contributing-agreement)
+
+<!-- /TOC -->
 
 ## Overview
 
@@ -45,12 +64,14 @@ For those kinds of features we recommend [Netflix's Zuul](https://github.com/Net
 with [Netflix's Eureka](https://github.com/Netflix/eureka) or
 [Lyft's Envoy](https://www.envoyproxy.io/).
 
+<a id="markdown-configuration" name="configuration"></a>
 ## Configuration
 
 This proxy is built around OpenAPI consumes an OpenAPI specification as configuration.
 It looks for a set of extensions at certain key points in the document. Below are
 each of the locations and extensions the system expects in order to run.
 
+<a id="markdown-runtime-settings" name="runtime-settings"></a>
 ### Runtime Settings
 
 The HTTP server is provided by another one of our libraries,
@@ -91,6 +112,7 @@ x-runtime:
     address: ":8080"
 ```
 
+<a id="markdown-backend-settings" name="backend-settings"></a>
 ### Backend Settings
 
 In addition to the runtime, the system also expects that all backend configurations
@@ -113,6 +135,7 @@ x-transportd:
       ttl: "1h0m0s"
 ```
 
+<a id="markdown-route-settings" name="route-settings"></a>
 ### Route Settings
 
 Each route in the OpenAPI specification will need its own `x-transportd`
@@ -214,15 +237,13 @@ x-transportd:
     # (int) Number of URL segments to remove from the beginning of the path before redirect.
     count: 0
   requestheaderinject:
-    # ([]string) List of header names to inject.
-    names:
-    # ([]string) List of header values to inject.
-    values:
+    # (map[string]string) Map values of header names:values to inject.
+    x-header-1: value1
+    x-header-2: value2
   responseheaderinject:
-    # ([]string) List of header names to inject.
-    names:
-    # ([]string) List of header values to inject.
-    values:
+    # (map[string]string) Map values of header names:values to inject.
+    x-header-1: value1
+    x-header-2: value2
   basicauth:
     # (string) Username to use in HTTP basic authentication.
     username: ""
@@ -230,6 +251,7 @@ x-transportd:
     password: ""
 ```
 
+<a id="markdown-environment-variables" name="environment-variables"></a>
 ### Environment Variables
 
 For cases where a static YAML file is insufficient, such as deploying to multiple
@@ -241,6 +263,7 @@ environment variable value that is identified by the name inside the pattern.
 For example, `${FOO}` will result in the `FOO` environment variable being fetched
 and the value inserted.
 
+<a id="markdown-custom-plugins-and-builds" name="custom-plugins-and-builds"></a>
 ## Custom Plugins And Builds
 
 Unfortunately, go does not have good support for dynamic loading of plugins and the
@@ -254,6 +277,7 @@ requires creating a custom build of this project.
 Documentation for custom components that handle things such as header validation can be found at [docs/components.md](docs/components.md)
 
 
+<a id="markdown-writing-a-component" name="writing-a-component"></a>
 ### Writing A Component
 
 This project uses another one of our libraries, [settings](https://github.com/asecurityteam/settings),
@@ -363,6 +387,7 @@ func (*TimeoutComponent) New(_ context.Context, conf *TimeoutConfig) (func(http.
 }
 ```
 
+<a id="markdown-generating-a-build" name="generating-a-build"></a>
 ### Generating A Build
 
 Creating a custom build is equivalent to copying the `main.go` from this project
@@ -438,6 +463,7 @@ func main() {
 }
 ```
 
+<a id="markdown-using-as-a-library" name="using-as-a-library"></a>
 ## Using As A Library
 
 While the source projects like
@@ -462,12 +488,15 @@ The resulting `http.RoundTripper` implements all of the smart functionality of t
 reverse proxy but is exposed as a component that can be embedded in code and used
 anywhere an HTTP client would otherwise be used.
 
+<a id="markdown-contributing" name="contributing"></a>
 ## Contributing
 
+<a id="markdown-license" name="license"></a>
 ### License
 
 This project is licensed under Apache 2.0. See LICENSE.txt for details.
 
+<a id="markdown-contributing-agreement" name="contributing-agreement"></a>
 ### Contributing Agreement
 
 Atlassian requires signing a contributor's agreement before we can accept a
