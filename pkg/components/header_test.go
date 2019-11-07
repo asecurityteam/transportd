@@ -1,7 +1,9 @@
 package components
 
 import (
+	"bytes"
 	"context"
+	"io/ioutil"
 	"net/http"
 	"testing"
 
@@ -10,24 +12,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHeaderInjectionConfigError(t *testing.T) {
-	cmp := &HeaderComponent{}
-	set := cmp.Settings()
-	set.Names = []string{"one", "two"}
-	set.Values = []string{"one"}
-	_, err := cmp.New(context.Background(), set)
-	assert.Error(t, err)
-}
-
-func TestHeaderInjection(t *testing.T) {
+func TestRequestHeaderInjection(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	rt := NewMockRoundTripper(ctrl)
-	cmp := &HeaderComponent{}
+	cmp := &RequestHeaderComponent{}
 	set := cmp.Settings()
-	set.Names = []string{"one", "two", "three"}
-	set.Values = []string{"a", "b", "c"}
+	set.Headers = map[string][]string{"one": {"a"}, "two": {"b"}, "three": {"c"}}
 	d, err := cmp.New(context.Background(), set)
 	assert.NoError(t, err)
 
@@ -41,4 +33,40 @@ func TestHeaderInjection(t *testing.T) {
 	})
 	_, err = wrapped.RoundTrip(req)
 	assert.NoError(t, err)
+}
+
+func TestResponseHeaderInjection(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	rt := NewMockRoundTripper(ctrl)
+	cmp := &ResponseHeaderComponent{}
+	set := cmp.Settings()
+	set.Headers = map[string][]string{"one": {"a"}, "two": {"b"}, "three": {"c"}}
+	d, err := cmp.New(context.Background(), set)
+	assert.NoError(t, err)
+
+	req, _ := http.NewRequest(http.MethodGet, "http://localhost", http.NoBody)
+	wrapped := d(rt)
+
+	mockResponse := &http.Response{
+		StatusCode: http.StatusOK,
+		Status:     "200 OK",
+		Header: http.Header{
+			"One":  []string{"NOT A"},
+			"Four": []string{"d"},
+		},
+		Body: ioutil.NopCloser(bytes.NewReader([]byte(""))),
+	}
+
+	rt.EXPECT().RoundTrip(gomock.Any()).Return(mockResponse, nil)
+	resp, err := wrapped.RoundTrip(req)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "200 OK", resp.Status)
+	assert.Equal(t, "a", resp.Header.Get("one"))
+	assert.Equal(t, "b", resp.Header.Get("two"))
+	assert.Equal(t, "c", resp.Header.Get("three"))
+	assert.Equal(t, "d", resp.Header.Get("four"))
+
 }

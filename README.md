@@ -159,7 +159,8 @@ x-transportd:
     - "requestvalidation"
     - "responsevalidation"
     - "strip"
-    - "headerinject"
+    - "requestheaderinject"
+    - "responseheaderinject"
     - "basicauth"
   # (string) Backend target for this route.
   backend: "backendName"
@@ -236,11 +237,20 @@ x-transportd:
   strip:
     # (int) Number of URL segments to remove from the beginning of the path before redirect.
     count: 0
-  headerinject:
-    # ([]string) List of header names to inject.
-    names:
-    # ([]string) List of header values to inject.
-    values:
+  requestheaderinject:
+    # (map[string][]string) Map values of header names:values to inject.
+    headers:
+      x-header-1:
+        - "value1"
+      x-header-2:
+        - "value2"
+  responseheaderinject:
+    # (map[string][]string) Map values of header names:values to inject.
+    headers:
+      x-header-1:
+        - "value1"
+      x-header-2:
+        - "value2"
   basicauth:
     # (string) Username to use in HTTP basic authentication.
     username: ""

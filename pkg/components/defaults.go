@@ -19,7 +19,8 @@ var (
 		RequestValidation,
 		ResponseValidation,
 		Strip,
-		Header,
+		RequestHeader,
+		ResponseHeader,
 		BasicAuth,
 		ValidateHeaders,
 	}
