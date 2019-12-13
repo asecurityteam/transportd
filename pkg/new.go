@@ -12,6 +12,17 @@ import (
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
 
+// ContextKeyOpenAPISpec is used to define a helper function to avoid key collisions in
+// the context.  If the raw openapi3.Swagger object is needed in a component that
+// defines a transportd plugin, the object can be retrieved from the context passed
+// to the "New" function by:
+// ctx.Value(transportd.ContextKeyOpenAPISpec.String("doc")).(*openapi3.Swagger)
+type ContextKeyOpenAPISpec string
+
+func (c ContextKeyOpenAPISpec) String() string {
+	return "CTX_KEY_OPEN_API_SPEC" + string(c)
+}
+
 func newSpecification(source []byte) (*openapi3.Swagger, error) {
 	envProcessor := NewEnvProcessor()
 	source, err := envProcessor.Process(source)
@@ -88,6 +99,7 @@ func NewTransport(ctx context.Context, specification []byte, components ...NewCo
 	if err != nil {
 		return nil, err
 	}
+	ctx = context.WithValue(ctx, ContextKeyOpenAPISpec("doc"), spec)
 	transport, err := newTransport(ctx, spec, components...)
 	return transport, err
 }
@@ -99,6 +111,7 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 	if err != nil {
 		return nil, err
 	}
+	ctx = context.WithValue(ctx, ContextKeyOpenAPISpec("doc"), spec)
 	transport, err := newTransport(ctx, spec, components...)
 	if err != nil {
 		return nil, err
