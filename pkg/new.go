@@ -12,16 +12,19 @@ import (
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
 
-// ContextKeyOpenAPISpec is used to define a helper function to avoid key collisions in
-// the context.  If the raw openapi3.Swagger object is needed in a component that
-// defines a transportd plugin, the object can be retrieved from the context passed
-// to the "New" function by:
-// ctx.Value(transportd.ContextKeyOpenAPISpec.String("doc")).(*openapi3.Swagger)
-type ContextKeyOpenAPISpec string
+type contextKey string
 
-func (c ContextKeyOpenAPISpec) String() string {
-	return "CTX_KEY_OPEN_API_SPEC" + string(c)
+func (c contextKey) String() string {
+	return "transportd_context_key_" + string(c)
 }
+
+var (
+	// ContextKeyOpenAPISpec is a key used for placing the raw openapi3.Swagger object
+	// into the context.  If it is needed in a component that defines a transportd plugin,
+	// the object can be retrieved from the context passed to the "New" function by:
+	// ctx.Value(transportd.ContextKeyOpenAPISpec).(*openapi3.Swagger)
+	ContextKeyOpenAPISpec = contextKey("OpenAPISpec")
+)
 
 func newSpecification(source []byte) (*openapi3.Swagger, error) {
 	envProcessor := NewEnvProcessor()
@@ -99,7 +102,7 @@ func NewTransport(ctx context.Context, specification []byte, components ...NewCo
 	if err != nil {
 		return nil, err
 	}
-	ctx = context.WithValue(ctx, ContextKeyOpenAPISpec("doc"), spec)
+	ctx = context.WithValue(ctx, ContextKeyOpenAPISpec, spec)
 	transport, err := newTransport(ctx, spec, components...)
 	return transport, err
 }
@@ -111,7 +114,7 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 	if err != nil {
 		return nil, err
 	}
-	ctx = context.WithValue(ctx, ContextKeyOpenAPISpec("doc"), spec)
+	ctx = context.WithValue(ctx, ContextKeyOpenAPISpec, spec)
 	transport, err := newTransport(ctx, spec, components...)
 	if err != nil {
 		return nil, err
