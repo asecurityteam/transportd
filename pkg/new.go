@@ -20,8 +20,8 @@ func (c contextKey) String() string {
 
 var (
 	// ContextKeyOpenAPISpec is a key used for placing the raw openapi3.Swagger object
-	// into the context.  If it is needed in a component that defines a transportd plugin,
-	// the object can be retrieved from the context passed to the "New" function by:
+	// pointer into the context.  If it is needed in a component that defines a transportd
+	// plugin, the object can be retrieved from the context passed to the "New" function by:
 	// ctx.Value(transportd.ContextKeyOpenAPISpec).(*openapi3.Swagger)
 	ContextKeyOpenAPISpec = contextKey("OpenAPISpec")
 )
