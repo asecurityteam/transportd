@@ -10,12 +10,13 @@ import (
 type validateHeaderTransport struct {
 	Wrapped http.RoundTripper
 	Allowed map[string][]string
+	Split   map[string]string
 }
 
-func contains(s []string, target string) bool {
+func contains(s []string, target string, delimiter string) bool {
 	for _, c := range s {
-		// handle case where a header value is a comma separated list
-		for _, value := range strings.Split(c, ",") {
+		// split on a delimiter, where default is empty space " "
+		for _, value := range strings.Split(c, delimiter) {
 			if target == strings.TrimSpace(value) {
 				return true
 			}
@@ -24,16 +25,21 @@ func contains(s []string, target string) bool {
 	return false
 }
 
-func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string) error {
+func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string, split map[string]string) error {
 	checkedHeaderAndValues := make(map[string][]string)
-	for allowedKey, allowedValues := range allowed {
+	for allowedHeader, allowedValues := range allowed {
 		// check if incoming header values have a configured allowed header present and search through them if so
-		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedKey)]; present {
+		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedHeader)]; present {
+			delimiter := " "
+			if splitValue, ok := split[allowedHeader]; ok {
+				delimiter = splitValue
+			}
+
 			// iterate through configured allowed values for a header
-			for _, item := range allowedValues {
+			for _, allowedValue := range allowedValues {
 				// keep track of headers we have checked to return in the response if none are found
-				checkedHeaderAndValues[allowedKey] = append(checkedHeaderAndValues[allowedKey], item)
-				if contains(matchedIncomingHeaderValues, item) {
+				checkedHeaderAndValues[allowedHeader] = append(checkedHeaderAndValues[allowedHeader], allowedValue)
+				if contains(matchedIncomingHeaderValues, allowedValue, delimiter) {
 					return nil
 				}
 			}
@@ -43,7 +49,7 @@ func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]s
 }
 
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	err := incomingMatchesAllowed(r.Allowed, req.Header)
+	err := incomingMatchesAllowed(r.Allowed, req.Header, r.Split)
 	if err != nil {
 		return newError(http.StatusBadRequest, fmt.Sprintf("header validation failed due to: %s", err)), nil
 	}
@@ -53,6 +59,7 @@ func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, 
 // ValidateHeaderConfig is used to validate a map of headers and their allowed values against an incoming requests headers
 type ValidateHeaderConfig struct {
 	Allowed map[string][]string `description:"Map of headers to validate and the allowed values for those headers."`
+	Split   map[string]string   `description:"Map of headers to split on the associated value"`
 }
 
 // Name of the config root
@@ -79,6 +86,7 @@ func (*ValidateHeaderConfigComponent) New(_ context.Context, conf *ValidateHeade
 		return &validateHeaderTransport{
 			Wrapped: wrapped,
 			Allowed: conf.Allowed,
+			Split:   conf.Split,
 		}
 	}, nil
 }
