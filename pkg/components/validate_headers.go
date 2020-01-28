@@ -15,12 +15,17 @@ type validateHeaderTransport struct {
 
 func contains(s []string, target string, delimiter string) bool {
 	for _, c := range s {
-		// split on a delimiter, where default is empty space " "
-		for _, value := range strings.Split(c, delimiter) {
-			if target == strings.TrimSpace(value) {
-				return true
+		// split on a delimiter if delimiter is not empty
+		if delimiter != "" {
+			for _, value := range strings.Split(c, delimiter) {
+				if target == strings.TrimSpace(value) {
+					return true
+				}
 			}
+		} else if target == strings.TrimSpace(c) {
+			return true
 		}
+
 	}
 	return false
 }
@@ -30,7 +35,7 @@ func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]s
 	for allowedHeader, allowedValues := range allowed {
 		// check if incoming header values have a configured allowed header present and search through them if so
 		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedHeader)]; present {
-			delimiter := " "
+			delimiter := ""
 			if splitValue, ok := split[allowedHeader]; ok {
 				delimiter = splitValue
 			}
