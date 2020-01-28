@@ -388,6 +388,9 @@ func (*TimeoutComponent) Settings() *TimeoutConfig {
 // as the first argument, and must take the same type in the second argument as returned
 // by the 'Settings()' method. The return value must match this example.
 func (*TimeoutComponent) New(_ context.Context, conf *TimeoutConfig) (func(http.RoundTripper) http.RoundTripper, error) { // nolint
+  // the context object is guaranteed to have a pointer to the raw openapi3.Swagger document.  If the component needs
+  // this pointer, it should change the `_` to `ctx` in the named function parameters, and:
+  // ctx.Value(transportd.ContextKeyOpenAPISpec.String("doc")).(*openapi3.Swagger)
 	return func(next http.RoundTripper) http.RoundTripper {
 		return &timeoutRoundTripper{RoundTripper: next, after: conf.After}
 	}, nil
