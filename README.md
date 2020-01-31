@@ -152,6 +152,7 @@ x-transportd:
     - "metrics"
     - "accesslog"
     - "asapvalidate"
+    - "validateheaders"
     - "timeout"
     - "hedging"
     - "retry"
@@ -198,6 +199,14 @@ x-transportd:
     allowedaudience: ""
     # ([]string) Acceptable issuer strings.
     allowedissuers:
+  validateheaders:
+    # (map[string][]string) allowed list of headers whose values to check
+    allowed:
+      accept:
+        - "text/json"
+        - "text/html"
+    # (string) the delimiter to use for splitting header values when they come in single line
+    split: ","
   timeout:
     # (time.Duration) Duration after which the request is canceled.
     after: "175ms"
@@ -420,7 +429,8 @@ func main() {
 	plugins := []transportd.NewComponent{
 		components.Metrics,
 		components.AccessLog,
-		components.ASAPValidate,
+    components.ASAPValidate,
+    components.ValidateHeaders,
 		components.Timeout,
 		components.Hedging,
 		components.Retry,

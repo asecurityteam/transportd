@@ -72,13 +72,28 @@ paths:
           - "retry"
           - "requestvalidation"
           - "responsevalidation"
+          - "requestheaderinject"
+          - "responseheaderinject"
           - "strip"
           - "basicauth"
+        requestheaderinject:
+          headers:
+            x-header-1:
+              - "value1"
+            x-header-2:
+              - "value2"
+        responseheaderinject:
+          headers:
+            x-header-1:
+              - "value1"
+            x-header-2:
+              - "value2"
         validateheaders:
           allowed:
             accept:
               - "text/json"
               - "text/html"
+          split: ","
         backend: "app"
         timeout:
           after: "175ms"
