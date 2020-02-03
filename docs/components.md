@@ -22,7 +22,8 @@ validateheaders:
 ```
 
 
-Example: This configuration would verify that a header named `Ldap-Groups` or `Username` exists with any of the listed values for that header.
+Example: This configuration would verify that a header named `Ldap-Groups` or `Username` exists with any of the listed values for that header using the `split` value as the delimter to split
+values in the header value passed on the network.  Default value for `split` is comma `,`.
 ```yaml
 validateheaders:
   allowed:
@@ -31,5 +32,6 @@ validateheaders:
       - "pm"
     username:
       - "cloud-admin"
+    split: "&"
 ```
 
