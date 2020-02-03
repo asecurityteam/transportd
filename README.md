@@ -429,18 +429,18 @@ func main() {
 	plugins := []transportd.NewComponent{
 		components.Metrics,
 		components.AccessLog,
-    components.ASAPValidate,
-    components.ValidateHeaders,
+		components.ASAPValidate,
+		components.ValidateHeaders,
 		components.Timeout,
 		components.Hedging,
 		components.Retry,
 		components.ASAPToken,
 		components.RequestValidation,
 		components.ResponseValidation,
-    components.Strip,
-    // Insert any custom components here.
-    // The order doesn't matter because the installation order is
-    // determined by each path configuration.
+		components.Strip,
+		// Insert any custom components here.
+		// The order doesn't matter because the installation order is
+		// determined by each path configuration.
 	}
 
 	// Handle the -h flag and print settings.
