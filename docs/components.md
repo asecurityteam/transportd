@@ -21,9 +21,14 @@ validateheaders:
       - "pm"
 ```
 
+`validate_headers` also supports splitting on a configurable delimiter for each `allowed` header. To accomplish this, we set a `split` configuration using the headers name and the character(s) we want to `split` on.
 
-Example: This configuration would verify that a header named `Ldap-Groups` or `Username` exists with any of the listed values for that header using the `split` value as the delimter to split
-values in the header value passed on the network.  Default value for `split` is comma `,`.
+Example: This configuration would verify that a header named `Ldap-Groups` or `Username` exists with any of the listed values after being split with the configured delimiter. For instance, incoming headers with values set like:
+```yaml
+Ldap-Groups: "hr&pm&sre"
+Username: "jsmith,jakesmith,jakes"
+```
+Would need the following configuration in order to be split and validated correctly.
 ```yaml
 validateheaders:
   allowed:
@@ -32,6 +37,9 @@ validateheaders:
       - "pm"
     username:
       - "cloud-admin"
-    split: "&"
+      - "jakesmith"
+    split:
+      ldap-groups: "&"
+      username: ","
 ```
 
