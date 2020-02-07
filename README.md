@@ -205,8 +205,9 @@ x-transportd:
       accept:
         - "text/json"
         - "text/html"
-    # (string) the delimiter to use for splitting header values when they come in single line
-    split: ","
+    # (map[string] string) the delimiters to use for splitting header-specific values when they come in single line
+    split:
+      accept: ","
   timeout:
     # (time.Duration) Duration after which the request is canceled.
     after: "175ms"
