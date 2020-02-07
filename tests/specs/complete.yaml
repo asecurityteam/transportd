@@ -93,7 +93,11 @@ paths:
             accept:
               - "text/json"
               - "text/html"
-          split: ","
+            x-response-header:
+              - "value1"
+              - "value2"
+          split:
+            x-response-header: ","
         backend: "app"
         timeout:
           after: "175ms"
