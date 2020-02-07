@@ -10,7 +10,7 @@ import (
 type validateHeaderTransport struct {
 	Wrapped http.RoundTripper
 	Allowed map[string][]string
-	Split   string
+	Split   map[string]string
 }
 
 func contains(s []string, target string, delimiter string) bool {
@@ -30,17 +30,18 @@ func contains(s []string, target string, delimiter string) bool {
 	return false
 }
 
-func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string, split string) error {
+func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string, split map[string]string) error {
 	checkedHeaderAndValues := make(map[string][]string)
 	for allowedHeader, allowedValues := range allowed {
 		// check if incoming header values have a configured allowed header present and search through them if so
 		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedHeader)]; present {
-
+			// extract split value based on config for matched header, if no match it returns ""
+			splitValue := split[allowedHeader]
 			// iterate through configured allowed values for a header
 			for _, allowedValue := range allowedValues {
 				// keep track of headers we have checked to return in the response if none are found
 				checkedHeaderAndValues[allowedHeader] = append(checkedHeaderAndValues[allowedHeader], allowedValue)
-				if contains(matchedIncomingHeaderValues, allowedValue, split) {
+				if contains(matchedIncomingHeaderValues, allowedValue, splitValue) {
 					return nil
 				}
 			}
@@ -60,7 +61,7 @@ func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, 
 // ValidateHeaderConfig is used to validate a map of headers and their allowed values against an incoming requests headers
 type ValidateHeaderConfig struct {
 	Allowed map[string][]string `description:"Map of headers to validate and the allowed values for those headers."`
-	Split   string              `description:"The delimiter to use on the associated value"`
+	Split   map[string]string   `description:"Map of delimiters to split on given headers to validate"`
 }
 
 // Name of the config root
@@ -83,14 +84,6 @@ func (*ValidateHeaderConfigComponent) Settings() *ValidateHeaderConfig {
 
 // New generates the middleware.
 func (*ValidateHeaderConfigComponent) New(_ context.Context, conf *ValidateHeaderConfig) (func(tripper http.RoundTripper) http.RoundTripper, error) {
-	if strings.TrimSpace(conf.Split) == "" { // revert to default
-		conf.Split = ","
-	} else if len(strings.TrimSpace(conf.Split)) > 1 {
-		return nil, fmt.Errorf("configured split value of '%s' is not allowed", conf.Split)
-	} else {
-		conf.Split = strings.TrimSpace(conf.Split)
-	}
-
 	return func(wrapped http.RoundTripper) http.RoundTripper {
 		return &validateHeaderTransport{
 			Wrapped: wrapped,

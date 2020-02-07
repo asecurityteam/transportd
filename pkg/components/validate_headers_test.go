@@ -1,7 +1,6 @@
 package components
 
 import (
-	"context"
 	"net/http"
 	"testing"
 
@@ -11,89 +10,89 @@ import (
 
 func Test_incomingMatchesAllowed(t *testing.T) {
 	defaultAllowedHeaderAndValues := map[string][]string{"Ldap-Groups": {"sre", "devs"}}
-	defaultDelimiterValue := ","
+	defaultDelimiterValues := map[string]string{"Ldap-Groups": ","}
 	tests := []struct {
 		name           string
 		allowedHeader  map[string][]string
 		incomingHeader map[string][]string
-		delimiter      string
+		delimiter      map[string]string
 		wantErr        bool
 	}{
 		{
 			name:           "multiple incoming header values with multiple allowed values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        false,
 		},
 		{
 			name:           "multiple incoming header values with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre", "devs"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        false,
 		},
 		{
 			name:           "multiple incoming header values separated by a comma with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre,ops", "security,devs"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        false,
 		},
 		{
 			name:           "single incoming header value separated by a comma with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"ops"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"security,ops"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        false,
 		},
 		{
 			name:           "single incoming header value with multiple allowed values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        false,
 		},
 		{
 			name:           "single incoming header value with a single allowed value",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"devs"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"devs"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        false,
 		},
 		{
 			name:           "single incoming header with a single allowed value and multiple allowed headers",
 			allowedHeader:  map[string][]string{"Ldap-Groups": {"sre"}, "Client": {"mobile"}},
 			incomingHeader: map[string][]string{"Ldap-Groups": {"sre"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        false,
 		},
 		{
 			name:           "single incorrect incoming header value",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"design"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        true,
 		},
 		{
 			name:           "multiple incorrect incoming header values with multiple allowed values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"Ldap-Groups": {"design", "finance"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        true,
 		},
 		{
 			name:           "missing specific incoming header",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"meh": {"sre", "devs"}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        true,
 		},
 		{
 			name:           "missing incoming header and values",
 			allowedHeader:  defaultAllowedHeaderAndValues,
 			incomingHeader: map[string][]string{"": {""}},
-			delimiter:      defaultDelimiterValue,
+			delimiter:      defaultDelimiterValues,
 			wantErr:        true,
 		},
 	}
@@ -186,7 +185,7 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 		name           string
 		allowedHeaders map[string][]string
 		testHeaders    http.Header
-		split          string
+		split          map[string]string
 		wantErr        bool
 		wantResponse   int
 	}{
@@ -196,7 +195,7 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			testHeaders: http.Header{
 				"Client": {"mobile", "browser"},
 			},
-			split:        "",
+			split:        map[string]string{},
 			wantErr:      false,
 			wantResponse: http.StatusOK,
 		},
@@ -206,7 +205,18 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			testHeaders: http.Header{
 				"Client": {"browser,mobile"},
 			},
-			split: ",",
+			split: map[string]string{"client": ","},
+
+			wantErr:      false,
+			wantResponse: http.StatusOK,
+		},
+		{
+			name:           "valid header and values present with split delimiter, multi length delimiter",
+			allowedHeaders: map[string][]string{"client": {"browser", "mobile"}},
+			testHeaders: http.Header{
+				"Client": {"browser,.-mobile"},
+			},
+			split: map[string]string{"client": ",.-"},
 
 			wantErr:      false,
 			wantResponse: http.StatusOK,
@@ -217,7 +227,29 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			testHeaders: http.Header{
 				"Client": {"telnet"},
 			},
-			split: "",
+			split: map[string]string{},
+
+			wantErr:      false,
+			wantResponse: http.StatusBadRequest,
+		},
+		{
+			name:           "empty delimiter for split success",
+			allowedHeaders: map[string][]string{"client": {"browser"}},
+			testHeaders: http.Header{
+				"Client": {"browser", "mobile"},
+			},
+			split: map[string]string{"client": ""},
+
+			wantErr:      false,
+			wantResponse: http.StatusOK,
+		},
+		{
+			name:           "empty delimiter for split failure",
+			allowedHeaders: map[string][]string{"client": {"browser"}},
+			testHeaders: http.Header{
+				"Client": {"browsermobile"},
+			},
+			split: map[string]string{"client": ""},
 
 			wantErr:      false,
 			wantResponse: http.StatusBadRequest,
@@ -246,56 +278,6 @@ func Test_validateHeadersRoundTrip(t *testing.T) {
 			got, err := c.RoundTrip(r)
 			require.Equal(t, err != nil, tt.wantErr)
 			require.Equal(t, tt.wantResponse, got.StatusCode)
-		})
-	}
-}
-
-func Test_configRestrictions(t *testing.T) {
-	tests := []struct {
-		name    string
-		split   string
-		wantErr bool
-	}{
-		{
-			name:    "two-char delimiter is not allowed",
-			split:   ",m",
-			wantErr: true,
-		},
-		{
-			name:    "multi-char delimiter is not allowed",
-			split:   "muchcharhappy",
-			wantErr: true,
-		},
-		{
-			name:    "multi-char delimiter with spaces is not allowed",
-			split:   " this is not an allowed delimiter   ",
-			wantErr: true,
-		},
-		{
-			name:    "single char delimiter is allowed",
-			split:   ",",
-			wantErr: false,
-		},
-		{
-			name:    "single char delimiter wrapped in spaces is allowed and will be trimmed",
-			split:   "  ,   ",
-			wantErr: false,
-		},
-		{
-			name:    "empty char delimiter is allowed, and will default to ','",
-			split:   "   ",
-			wantErr: false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			validateHeaderConfigComponent := ValidateHeaderConfigComponent{}
-			validateHeaderConfig := ValidateHeaderConfig{
-				Split: tt.split,
-			}
-			_, err := validateHeaderConfigComponent.New(context.Background(), &validateHeaderConfig)
-			require.Equal(t, err != nil, tt.wantErr, "Expected an error due to a bad 'split' value in the map")
 		})
 	}
 }

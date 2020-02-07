@@ -13,7 +13,7 @@ require (
 	github.com/asecurityteam/httpstats v0.0.0-20190813145531-91840f2aba2e
 	github.com/asecurityteam/logevent v1.1.0
 	github.com/asecurityteam/runhttp v0.3.0
-	github.com/asecurityteam/settings v0.3.0
+	github.com/asecurityteam/settings v0.4.0
 	github.com/asecurityteam/transport v1.3.0
 	github.com/getkin/kin-openapi v0.0.0-20190729060947-8785b416cb32
 	github.com/gobuffalo/buffalo-plugins v1.13.0 // indirect

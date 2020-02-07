@@ -61,6 +61,8 @@ github.com/asecurityteam/settings v0.1.1-0.20190816180606-5974b79327c0 h1:9aPvJs
 github.com/asecurityteam/settings v0.1.1-0.20190816180606-5974b79327c0/go.mod h1:frhlF5kT7WvdiRX3eQlCOjSppbYUfxxjM9xKTvYjcGo=
 github.com/asecurityteam/settings v0.3.0 h1:hq89btfQhpcUsxm1NpLq8YAu8O/LjDGqCPfACAEfjDU=
 github.com/asecurityteam/settings v0.3.0/go.mod h1:frhlF5kT7WvdiRX3eQlCOjSppbYUfxxjM9xKTvYjcGo=
+github.com/asecurityteam/settings v0.4.0 h1:L7fK4WqkvnvglBrfLBgp77LUDR2cxfSNWGFex7lrMK0=
+github.com/asecurityteam/settings v0.4.0/go.mod h1:frhlF5kT7WvdiRX3eQlCOjSppbYUfxxjM9xKTvYjcGo=
 github.com/asecurityteam/transport v0.0.0-20190225122138-b848ebf618ee h1:pcVkgdO6BYvnOX/mJLDogdPnMq0XaEpJLtsOhHUiZKA=
 github.com/asecurityteam/transport v0.0.0-20190225122138-b848ebf618ee/go.mod h1:0OVTikRn0uMRQsFsslN4ozUaD5YaRPUpqHTBzTsOtaM=
 github.com/asecurityteam/transport v1.2.0 h1:KY+ipAiFzp7lHbizWD0X0DLqVXk33n3Q9F2sltPK4mw=
