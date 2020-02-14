@@ -152,6 +152,7 @@ x-transportd:
     - "metrics"
     - "accesslog"
     - "asapvalidate"
+    - "validateheaders"
     - "timeout"
     - "hedging"
     - "retry"
@@ -198,6 +199,15 @@ x-transportd:
     allowedaudience: ""
     # ([]string) Acceptable issuer strings.
     allowedissuers:
+  validateheaders:
+    # (map[string][]string) allowed list of headers whose values to check
+    allowed:
+      accept:
+        - "text/json"
+        - "text/html"
+    # (map[string] string) the delimiters to use for splitting header-specific values when they come in single line
+    split:
+      accept: ","
   timeout:
     # (time.Duration) Duration after which the request is canceled.
     after: "175ms"
@@ -424,16 +434,17 @@ func main() {
 		components.Metrics,
 		components.AccessLog,
 		components.ASAPValidate,
+		components.ValidateHeaders,
 		components.Timeout,
 		components.Hedging,
 		components.Retry,
 		components.ASAPToken,
 		components.RequestValidation,
 		components.ResponseValidation,
-    components.Strip,
-    // Insert any custom components here.
-    // The order doesn't matter because the installation order is
-    // determined by each path configuration.
+		components.Strip,
+		// Insert any custom components here.
+		// The order doesn't matter because the installation order is
+		// determined by each path configuration.
 	}
 
 	// Handle the -h flag and print settings.

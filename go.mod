@@ -13,7 +13,7 @@ require (
 	github.com/asecurityteam/httpstats v0.0.0-20190813145531-91840f2aba2e
 	github.com/asecurityteam/logevent v1.1.0
 	github.com/asecurityteam/runhttp v0.3.0
-	github.com/asecurityteam/settings v0.3.0
+	github.com/asecurityteam/settings v0.4.0
 	github.com/asecurityteam/transport v1.3.0
 	github.com/getkin/kin-openapi v0.0.0-20190729060947-8785b416cb32
 	github.com/gobuffalo/buffalo-plugins v1.13.0 // indirect
@@ -23,7 +23,7 @@ require (
 	github.com/gobuffalo/packd v0.0.0-20190224160250-d04dd98aca5b // indirect
 	github.com/gobuffalo/packr/v2 v2.0.1
 	github.com/gobuffalo/syncx v0.0.0-20190224160051-33c29581e754 // indirect
-	github.com/golang/mock v1.3.1
+	github.com/golang/mock v1.4.0
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/rogpeppe/go-internal v1.2.2 // indirect
 	github.com/stretchr/testify v1.3.0
