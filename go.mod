@@ -1,6 +1,6 @@
 module github.com/asecurityteam/transportd
 
-go 1.12
+go 1.13
 
 require (
 	bitbucket.org/atlassian/go-asap v0.0.0-20190921160616-bb88d6193af9
@@ -14,7 +14,7 @@ require (
 	github.com/asecurityteam/logevent v1.1.0
 	github.com/asecurityteam/runhttp v0.3.0
 	github.com/asecurityteam/settings v0.4.0
-	github.com/asecurityteam/transport v1.3.0
+	github.com/asecurityteam/transport v1.3.1
 	github.com/getkin/kin-openapi v0.0.0-20190729060947-8785b416cb32
 	github.com/gobuffalo/buffalo-plugins v1.13.0 // indirect
 	github.com/gobuffalo/gogen v0.0.0-20190224213239-1c6076128bbc // indirect
@@ -25,7 +25,9 @@ require (
 	github.com/gobuffalo/syncx v0.0.0-20190224160051-33c29581e754 // indirect
 	github.com/golang/mock v1.4.0
 	github.com/google/uuid v1.1.1 // indirect
+	github.com/justinas/alice v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.2.2 // indirect
+	github.com/rs/cors v1.7.0 // indirect
 	github.com/stretchr/testify v1.3.0
 	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
 	golang.org/x/net v0.0.0-20190930134127-c5a3c61f89f3 // indirect

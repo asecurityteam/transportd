@@ -89,7 +89,7 @@ func NewBaseTransports(ctx context.Context, s settings.Source) (BackendRegistry,
 				*host.StringValue, backend, err.Error(),
 			)
 		}
-		f := transport.NewFactory(transport.OptionDefaultTransport)
+		f := transport.NewFactory()
 		f = transport.NewRecyclerFactory(
 			f,
 			transport.RecycleOptionTTL(*poolTTL.DurationValue),
