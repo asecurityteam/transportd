@@ -14,7 +14,7 @@ require (
 	github.com/asecurityteam/logevent v1.1.0
 	github.com/asecurityteam/runhttp v0.3.0
 	github.com/asecurityteam/settings v0.4.0
-	github.com/asecurityteam/transport v1.3.0
+	github.com/asecurityteam/transport v1.3.1
 	github.com/getkin/kin-openapi v0.0.0-20190729060947-8785b416cb32
 	github.com/gobuffalo/buffalo-plugins v1.13.0 // indirect
 	github.com/gobuffalo/gogen v0.0.0-20190224213239-1c6076128bbc // indirect
@@ -34,3 +34,4 @@ require (
 )
 
 replace git.apache.org/thrift.git => github.com/apache/thrift v0.0.0-20180902110319-2566ecd5d999
+ 
