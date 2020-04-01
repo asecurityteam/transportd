@@ -41,6 +41,8 @@ paths:
           type: string
     get:
       description: Fetches a greeting.
+      security:
+        - BearerAuth: []
       operationId: hello
       parameters:
         - name: name
@@ -63,6 +65,10 @@ paths:
               schema:
                 type: string
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     Greeting:
       required:
