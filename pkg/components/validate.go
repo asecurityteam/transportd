@@ -24,6 +24,9 @@ func (r *inputValidatingTransport) RoundTrip(req *http.Request) (*http.Response,
 		Request:     req,
 		QueryParams: req.URL.Query(),
 		PathParams:  params,
+		Options: &openapi3filter.Options{
+			AuthenticationFunc: func(c context.Context, input *openapi3filter.AuthenticationInput) error { return nil },
+		},
 	}
 	err := openapi3filter.ValidateRequest(req.Context(), input)
 	if err != nil {
