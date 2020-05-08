@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
 
@@ -47,7 +48,20 @@ type ClientTransport struct {
 func (r *ClientTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	route, pathParams, err := r.Router.FindRoute(req.Method, req.URL)
 	if err != nil {
-		return newError(http.StatusNotFound, err.Error()), nil
+		defaultTr := r.Registry.Load(req.Context(), unknownKey, unknownKey)
+		if defaultTr == nil {
+			return newError(http.StatusNotFound, err.Error()), nil
+		}
+		route = &openapi3filter.Route{
+			Method: req.Method,
+			Path:   unknownKey,
+			Operation: &openapi3.Operation{
+				OperationID: unknownKey,
+			},
+		}
+		req = req.WithContext(RouteToContext(req.Context(), route))
+		req = req.WithContext(PathParamsToContext(req.Context(), make(map[string]string)))
+		return defaultTr.RoundTrip(req)
 	}
 	req = req.WithContext(RouteToContext(req.Context(), route))
 	req = req.WithContext(PathParamsToContext(req.Context(), pathParams))

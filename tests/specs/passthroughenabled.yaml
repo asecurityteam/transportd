@@ -1,0 +1,193 @@
+openapi: 3.0.0
+x-runtime:
+  httpserver:
+    address: ":8080"
+  logger:
+    level: "INFO"
+    output: "STDOUT"
+  stats:
+    output: "NULL"
+    datadog:
+      address: "statsd:8126"
+      flushinterval: "10s"
+  signals:
+    installed:
+      - "OS"
+    os:
+      signals:
+        - 2 # SIGINT
+        - 15 # SIGTERM
+x-transportd:
+  backends:
+    - app
+    - default
+  app:
+    host: "https://localhost/"
+    pool:
+      ttl: "24h"
+      count: 1
+  default:
+    host: "https://localhost/"
+    pool:
+      ttl: "24h"
+      count: 1
+    allowUnknown:
+      enabled:
+        - "metrics"
+        - "validateheaders"
+        - "accesslog"
+        - "timeout"
+        - "hedging"
+        - "retry"
+        - "requestvalidation"
+        - "responsevalidation"
+        - "requestheaderinject"
+        - "responseheaderinject"
+        - "strip"
+        - "basicauth"
+      requestheaderinject:
+        headers:
+          x-header-1:
+            - "value1"
+          x-header-2:
+            - "value2"
+      responseheaderinject:
+        headers:
+          x-header-1:
+            - "value1"
+          x-header-2:
+            - "value2"
+      validateheaders:
+        allowed:
+          accept:
+            - "text/json"
+            - "text/html"
+          x-response-header:
+            - "value1"
+            - "value2"
+        split:
+          x-response-header: ","
+      timeout:
+        after: "175ms"
+      hedging:
+        interval: "50ms"
+      retry:
+        backoff: "50ms"
+        limit: 3
+        codes:
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 506
+          - 507
+          - 508
+          - 509
+          - 510
+          - 511
+      strip:
+        count: 0
+      basicauth:
+        username: "user"
+        password: "password"
+info:
+  version: 1.0.0
+  title: Sample specification
+  description: Used for testing
+  contact:
+    name: n/a
+    email: na@localhost.com
+  license:
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+paths:
+  /:
+    post:
+      description: Publish a message.
+      parameters:
+        - name: "topic"
+          in: "path"
+          description: "Logical topic name."
+          required: true
+          schema:
+            type: "string"
+        - name: "key"
+          in: "path"
+          description: "The partition key."
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        required: true
+        description: The event to publish.
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+      responses:
+        "204":
+          description: "Success"
+      x-transportd:
+        enabled:
+          - "metrics"
+          - "validateheaders"
+          - "accesslog"
+          - "timeout"
+          - "hedging"
+          - "retry"
+          - "requestvalidation"
+          - "responsevalidation"
+          - "requestheaderinject"
+          - "responseheaderinject"
+          - "strip"
+          - "basicauth"
+        requestheaderinject:
+          headers:
+            x-header-1:
+              - "value1"
+            x-header-2:
+              - "value2"
+        responseheaderinject:
+          headers:
+            x-header-1:
+              - "value1"
+            x-header-2:
+              - "value2"
+        validateheaders:
+          allowed:
+            accept:
+              - "text/json"
+              - "text/html"
+            x-response-header:
+              - "value1"
+              - "value2"
+          split:
+            x-response-header: ","
+        backend: "app"
+        timeout:
+          after: "175ms"
+        hedging:
+          interval: "50ms"
+        retry:
+          backoff: "50ms"
+          limit: 3
+          codes:
+            - 500
+            - 501
+            - 502
+            - 503
+            - 504
+            - 505
+            - 506
+            - 507
+            - 508
+            - 509
+            - 510
+            - 511
+        strip:
+          count: 0
+        basicauth:
+          username: "user"
+          password: "password"

@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httputil"
+	"strings"
 
 	"github.com/asecurityteam/runhttp"
+	"github.com/asecurityteam/settings"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
@@ -24,6 +26,11 @@ var (
 	// plugin, the object can be retrieved from the context passed to the "New" function by:
 	// ctx.Value(transportd.ContextKeyOpenAPISpec).(*openapi3.Swagger)
 	ContextKeyOpenAPISpec = contextKey("OpenAPISpec")
+)
+
+const (
+	unknownKey   = "unknown"
+	allowUnknown = "allowUnknown"
 )
 
 func newSpecification(source []byte) (*openapi3.Swagger, error) {
@@ -72,6 +79,20 @@ func newTransport(ctx context.Context, specification *openapi3.Swagger, componen
 	clientF := &ClientFactory{
 		Bases:      transports,
 		Components: components,
+	}
+	if ptS, ptOk := s.Get(ctx, ExtensionKey, defaultBackendName, allowUnknown); ptOk {
+		// Rewrite the allowUnknown section to look like a normal route configuration.
+		unknownSource := settings.NewMapSource(map[string]interface{}{
+			ExtensionKey: ptS,
+		})
+		// Force default as the backend so the user doesn't have to provide it since
+		// it is already nested under the backend configuration.
+		unknownSource.Map[strings.ToLower(ExtensionKey)].(map[string]interface{})["backend"] = defaultBackendName
+		client, err := clientF.New(ctx, unknownSource, unknownKey, unknownKey)
+		if err != nil {
+			return nil, fmt.Errorf("failed default client configuration for unknown paths: %s", err)
+		}
+		reg.Store(ctx, unknownKey, unknownKey, client)
 	}
 	for path, pathItem := range specification.Paths {
 		for method, op := range pathItem.Operations() {

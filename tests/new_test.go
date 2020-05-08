@@ -31,6 +31,11 @@ func TestNewService(t *testing.T) {
 			Spec:    data.Bytes("missingruntime.yaml"),
 			WantErr: true,
 		},
+		{
+			Name:    "passthrough enabled",
+			Spec:    data.Bytes("passthroughenabled.yaml"),
+			WantErr: false,
+		},
 	}
 
 	for _, tt := range tcs {
