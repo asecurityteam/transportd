@@ -42,7 +42,11 @@ type ClientTransport struct {
 }
 
 // RoundTrip performs a client lookup and uses the result to execute the
-// request. If a client is not found then a NotFound response it returned.
+// request.
+//
+// If a client is not found then a NotFound response it returned unless there
+// is a route for the path "unknown" and the method "unknown".
+//
 // If a client is found then the Route is injected into the request context
 // for later use.
 func (r *ClientTransport) RoundTrip(req *http.Request) (*http.Response, error) {
