@@ -9,20 +9,20 @@
 <!-- TOC -->
 
 - [transportd - HTTP Middleware As A Service](#transportd---http-middleware-as-a-service)
-    - [Overview](#overview)
-    - [Configuration](#configuration)
-        - [Runtime Settings](#runtime-settings)
-        - [Backend Settings](#backend-settings)
-        - [Route Settings](#route-settings)
-        - [Environment Variables](#environment-variables)
-    - [Custom Plugins And Builds](#custom-plugins-and-builds)
-        - [Custom Components](#custom-components)
-        - [Writing A Component](#writing-a-component)
-        - [Generating A Build](#generating-a-build)
-    - [Using As A Library](#using-as-a-library)
-    - [Contributing](#contributing)
-        - [License](#license)
-        - [Contributing Agreement](#contributing-agreement)
+  - [Overview](#overview)
+  - [Configuration](#configuration)
+    - [Runtime Settings](#runtime-settings)
+    - [Backend Settings](#backend-settings)
+    - [Route Settings](#route-settings)
+    - [Environment Variables](#environment-variables)
+  - [Custom Plugins And Builds](#custom-plugins-and-builds)
+    - [Custom Components](#custom-components)
+    - [Writing A Component](#writing-a-component)
+    - [Generating A Build](#generating-a-build)
+  - [Using As A Library](#using-as-a-library)
+  - [Contributing](#contributing)
+    - [License](#license)
+    - [Contributing Agreement](#contributing-agreement)
 
 <!-- /TOC -->
 
@@ -135,6 +135,32 @@ x-transportd:
       # (time.Duration) Lifetime of a pool before refreshing.
       ttl: "1h0m0s"
 ```
+
+If the proxy needs to allow unrecognized routes through to a backend then you
+must specify a backend with the name `default`. This backend must be given
+an extra key called `allowUnknown` that contains the equivalent of a route
+setting (documented in the next section). For example:
+
+```yaml
+x-transportd:
+  # ([]string) Available backends. Names are symbolic and referenced later.
+  backends:
+    - "default"
+  default:
+    # (string) Backend host URL.
+    host: "https://localhost"
+    pool:
+      # (int) Number of connections pools. Only use >1 if HTTP/2
+      count: 1
+      # (time.Duration) Lifetime of a pool before refreshing.
+      ttl: "1h0m0s"
+    allowUnknown:
+      enabled:
+        - "accesslog"
+```
+
+This configuration of middleware will be applied to all unknown route before
+they are proxied to the default backend.
 
 <a id="markdown-route-settings" name="route-settings"></a>
 ### Route Settings

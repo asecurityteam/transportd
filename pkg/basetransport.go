@@ -12,11 +12,12 @@ import (
 )
 
 const (
-	backendsSetting = "backends"
-	hostSetting     = "host"
-	countSetting    = "count"
-	ttlSetting      = "ttl"
-	poolSetting     = "pool"
+	defaultBackendName = "default"
+	backendsSetting    = "backends"
+	hostSetting        = "host"
+	countSetting       = "count"
+	ttlSetting         = "ttl"
+	poolSetting        = "pool"
 )
 
 type backendWrapper struct {

@@ -102,7 +102,34 @@ func TestClientTransportNotFound(t *testing.T) {
 	}
 	req, _ := http.NewRequest(http.MethodGet, "http://localhost/something", http.NoBody)
 
+	reg.EXPECT().Load(gomock.Any(), unknownKey, unknownKey).Return(nil)
 	resp, err := rt.RoundTrip(req)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, resp.StatusCode)
+}
+
+func TestClientTransportPassthrough(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	cl := NewMockRoundTripper(ctrl)
+	reg := NewMockClientRegistry(ctrl)
+	loader := openapi3.NewSwaggerLoader()
+	spec, _ := loader.LoadSwaggerFromData([]byte(spectxt))
+	router := openapi3filter.NewRouter()
+	assert.Nil(t, router.AddSwagger(spec))
+	rt := &ClientTransport{
+		Registry: reg,
+		Router:   router,
+	}
+	req, _ := http.NewRequest(http.MethodGet, "http://localhost/something", http.NoBody)
+	reg.EXPECT().Load(gomock.Any(), unknownKey, unknownKey).Return(cl)
+	cl.EXPECT().RoundTrip(gomock.Any()).Do(func(r *http.Request) {
+		route := RouteFromContext(r.Context())
+		assert.Equal(t, unknownKey, route.Path)
+		assert.Equal(t, http.MethodGet, route.Method)
+	})
+
+	_, err := rt.RoundTrip(req)
+	assert.Nil(t, err)
 }
