@@ -15,6 +15,7 @@ var (
 		Timeout,
 		Hedging,
 		Retry,
+		RetryAfter,
 		ASAPToken,
 		RequestValidation,
 		ResponseValidation,
