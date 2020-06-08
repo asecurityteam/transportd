@@ -182,6 +182,7 @@ x-transportd:
     - "timeout"
     - "hedging"
     - "retry"
+    - "retryafter" # honor the 429 response code and Retry-After response header, when present and parsable
     - "asaptoken"
     - "requestvalidation"
     - "responsevalidation"
