@@ -259,6 +259,7 @@ x-transportd:
       - 509
       - 510
       - 511
+  retryafter: # honor the 429 Retry-After header, when present and parsable
   asaptoken:
     # ([]string) JWT audience values to include in tokens.
     audiences:
