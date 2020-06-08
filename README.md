@@ -182,6 +182,7 @@ x-transportd:
     - "timeout"
     - "hedging"
     - "retry"
+    - "retryafter" # honor the 429 response code and Retry-After response header, when present and parsable
     - "asaptoken"
     - "requestvalidation"
     - "responsevalidation"
@@ -259,7 +260,6 @@ x-transportd:
       - 509
       - 510
       - 511
-  retryafter: # honor the 429 Retry-After header, when present and parsable
   asaptoken:
     # ([]string) JWT audience values to include in tokens.
     audiences:

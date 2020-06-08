@@ -23,7 +23,7 @@ require (
 	github.com/gobuffalo/packd v0.0.0-20190224160250-d04dd98aca5b // indirect
 	github.com/gobuffalo/packr/v2 v2.0.1
 	github.com/gobuffalo/syncx v0.0.0-20190224160051-33c29581e754 // indirect
-	github.com/golang/mock v1.4.0
+	github.com/golang/mock v1.4.3
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/justinas/alice v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.2.2 // indirect
