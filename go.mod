@@ -10,7 +10,7 @@ require (
 	github.com/asecurityteam/component-log v0.2.0 // indirect
 	github.com/asecurityteam/component-signals v0.2.0 // indirect
 	github.com/asecurityteam/component-stat v0.2.0 // indirect
-	github.com/asecurityteam/httpstats v0.0.0-20190813145531-91840f2aba2e
+	github.com/asecurityteam/httpstats v0.0.0-20200624183102-e32e0f906848
 	github.com/asecurityteam/logevent v1.1.0
 	github.com/asecurityteam/runhttp v0.3.0
 	github.com/asecurityteam/settings v0.4.0
