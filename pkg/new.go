@@ -150,13 +150,14 @@ func New(ctx context.Context, specification []byte, components ...NewComponent) 
 			}{
 				Reason: err.Error(),
 			})
+			code := ErrorToStatusCode(err)
 			b, _ := json.Marshal(HTTPError{
-				Code:   http.StatusBadGateway,
-				Status: http.StatusText(http.StatusBadGateway),
+				Code:   code,
+				Status: http.StatusText(code),
 				Reason: err.Error(),
 			})
 			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusBadGateway)
+			w.WriteHeader(code)
 			_, _ = w.Write(b)
 		},
 		ModifyResponse: (MultiResponseModifier{

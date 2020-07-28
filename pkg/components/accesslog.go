@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/asecurityteam/runhttp"
+	transportd "github.com/asecurityteam/transportd/pkg"
 )
 
 type accessLog struct {
@@ -61,10 +62,11 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	var start = time.Now()
 	var resp, e = c.Wrapped.RoundTrip(r)
 	a.Duration = int(time.Since(start).Nanoseconds() / 1e6)
-	a.Status = -1
 	if e == nil {
 		a.Status = resp.StatusCode
 		a.HTTPContentType = resp.Header.Get("Content-Type")
+	} else {
+		a.Status = transportd.ErrorToStatusCode(e)
 	}
 	runhttp.LoggerFromContext(r.Context()).Info(a)
 	return resp, e
