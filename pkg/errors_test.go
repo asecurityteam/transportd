@@ -1,9 +1,10 @@
 package transportd
 
 import (
-	"github.com/stretchr/testify/assert"
-	"golang.org/x/net/context"
+	"context"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestErrorToStatusCode(t *testing.T) {
