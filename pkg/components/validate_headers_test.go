@@ -17,6 +17,7 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 		incomingHeader map[string][]string
 		delimiter      map[string]string
 		wantErr        bool
+		errMsg         string
 	}{
 		{
 			name:           "multiple incoming header values with multiple allowed values",
@@ -95,11 +96,22 @@ func Test_incomingMatchesAllowed(t *testing.T) {
 			delimiter:      defaultDelimiterValues,
 			wantErr:        true,
 		},
+		{
+			name:           "single incoming header with a single allowed value and multiple allowed headers",
+			allowedHeader:  defaultAllowedHeaderAndValues,
+			incomingHeader: map[string][]string{"Ldap-Groups": {"other"}},
+			delimiter:      defaultDelimiterValues,
+			wantErr:        true,
+			errMsg:         "no matching values for required headers: map[Ldap-Groups:[sre devs]]. given matching headers and values: map[Ldap-Groups:[other]]",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := incomingMatchesAllowed(tt.allowedHeader, tt.incomingHeader, tt.delimiter)
 			require.Equal(t, tt.wantErr, err != nil)
+			if tt.errMsg != "" {
+				require.Equal(t, tt.errMsg, err.Error())
+			}
 		})
 	}
 }
