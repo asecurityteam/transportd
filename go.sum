@@ -38,10 +38,8 @@ github.com/asecurityteam/component-stat v0.1.0 h1:XTrPmQOyvs7iK5iW1ll6W5Eh7ZKDnZ
 github.com/asecurityteam/component-stat v0.1.0/go.mod h1:OiwAVfs+FntaUimVzyjfzNf4oiKZxM6L73zfTVqfvdo=
 github.com/asecurityteam/component-stat v0.2.0 h1:NT7gw0xK0hcwLv6KjMpFr3SzQE6nHWFPdb5YP8M0I6g=
 github.com/asecurityteam/component-stat v0.2.0/go.mod h1:VxBlEAdBvRMY9kj5ItlB+VVI3m+e24Xj2yU315eFYEY=
-github.com/asecurityteam/httpstats v0.0.0-20190813145531-91840f2aba2e h1:0a/JTFq11OUGM3+4BJyN/3NNvpbQz6CoqdHvapJ3flM=
-github.com/asecurityteam/httpstats v0.0.0-20190813145531-91840f2aba2e/go.mod h1:YzW2Klfs3JFVF8kPxfWt2xscZxgyhCBkcX4IoJO+BbA=
-github.com/asecurityteam/httpstats v0.0.0-20200624183102-e32e0f906848 h1:GHMoETgJvf2UdCCDiktAvzW//V+dQMK2NYTyrXpcFbA=
-github.com/asecurityteam/httpstats v0.0.0-20200624183102-e32e0f906848/go.mod h1:YzW2Klfs3JFVF8kPxfWt2xscZxgyhCBkcX4IoJO+BbA=
+github.com/asecurityteam/httpstats v0.0.0-20200806153718-d71ff7ed1047 h1:22XPatpbM6Dpbym7jNwUneD7U78gf18xlcP/IOgba1s=
+github.com/asecurityteam/httpstats v0.0.0-20200806153718-d71ff7ed1047/go.mod h1:YzW2Klfs3JFVF8kPxfWt2xscZxgyhCBkcX4IoJO+BbA=
 github.com/asecurityteam/logevent v0.0.0-20190225122144-b32737d8d51c h1:v630DsE4nvEfDCdi7OJhoHyNTPwuBplkTfGdv9WogbE=
 github.com/asecurityteam/logevent v0.0.0-20190225122144-b32737d8d51c/go.mod h1:B8p/D2QVPuRA9tiDTByVrXegCsrfy8bWEgnAka23EO0=
 github.com/asecurityteam/logevent v1.1.0 h1:rP9IOHE7tnVwTF4v9AfzmdX+AfagkPZ6Hx/T9l/fVIE=
