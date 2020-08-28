@@ -31,7 +31,6 @@ func contains(s []string, target string, delimiter string) bool {
 }
 
 func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]string, split map[string]string) error {
-	checkedHeaderAndValues := make(map[string][]string)
 	for allowedHeader, allowedValues := range allowed {
 		// check if incoming header values have a configured allowed header present and search through them if so
 		if matchedIncomingHeaderValues, present := incoming[http.CanonicalHeaderKey(allowedHeader)]; present {
@@ -39,15 +38,13 @@ func incomingMatchesAllowed(allowed map[string][]string, incoming map[string][]s
 			splitValue := split[allowedHeader]
 			// iterate through configured allowed values for a header
 			for _, allowedValue := range allowedValues {
-				// keep track of headers we have checked to return in the response if none are found
-				checkedHeaderAndValues[allowedHeader] = append(checkedHeaderAndValues[allowedHeader], allowedValue)
 				if contains(matchedIncomingHeaderValues, allowedValue, splitValue) {
 					return nil
 				}
 			}
 		}
 	}
-	return fmt.Errorf("no matching values for headers: %s. given matching headers and values: %s", allowed, checkedHeaderAndValues)
+	return fmt.Errorf("no matching values for required headers: %s. given matching headers and values: %s", allowed, incoming)
 }
 
 func (r *validateHeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
