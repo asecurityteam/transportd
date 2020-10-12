@@ -9,7 +9,7 @@ import (
 
 func TestErrorToStatusCode(t *testing.T) {
 	code := ErrorToStatusCode(context.Canceled)
-	assert.Equal(t, 504, code)
+	assert.Equal(t, 499, code)
 
 	code = ErrorToStatusCode(context.DeadlineExceeded)
 	assert.Equal(t, 504, code)
