@@ -26,11 +26,14 @@ func newError(code int, reason string) *http.Response {
 // ErrorToStatusCode There can be many reasons why we couldn't get a proper response from the upstream server.
 // This includes timeouts, inability to connect, or the client canceling a request.
 // This cannot all be captured with one status code. This method will convert golang errors to descriptive status codes.
-// context.Canceled: Something likely happened on the client side that canceled the request (such as a timeout), return 504
+// context.Canceled: Something likely happened on the client side that canceled the request (such as a timeout), return 499
 // context.DeadlineExceeded: Likely a timeout here in the proxy, return 504
 // Default: 502
 func ErrorToStatusCode(err error) int {
-	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+	if errors.Is(err, context.Canceled) {
+		return 499
+	}
+	if errors.Is(err, context.DeadlineExceeded) {
 		return http.StatusGatewayTimeout
 	}
 	return http.StatusBadGateway
