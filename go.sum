@@ -55,6 +55,8 @@ github.com/asecurityteam/transport v1.4.0 h1:vHAfsCNWW7jDfhLBUUyU+0daSJ6A0rdIbIP
 github.com/asecurityteam/transport v1.4.0/go.mod h1:0xMNyMZ8UYoW7VK+kP4xCIK/pwPBQCjTMcP+PqQIFBo=
 github.com/asecurityteam/transport v1.6.0 h1:Nd3pd/ZP2uKQd2CHiwVGYlmTtS81fIP66LSLiQ3VEF0=
 github.com/asecurityteam/transport v1.6.0/go.mod h1:qfuYUhtdNiKiwrTAwCuBC2kZuLIyhHHYp5AleGc6uAE=
+github.com/asecurityteam/transport v1.6.1 h1:79m3pgBYRgCjIL7M2dFDZB8Cs4H4Msqk+/ljvdRjTQc=
+github.com/asecurityteam/transport v1.6.1/go.mod h1:qfuYUhtdNiKiwrTAwCuBC2kZuLIyhHHYp5AleGc6uAE=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/bradfitz/go-smtpd v0.0.0-20170404230938-deb6d6237625/go.mod h1:HYsPBTaaSFSlLx/70C2HPIMNZpVV8+vt/A+FMnYP11g=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
