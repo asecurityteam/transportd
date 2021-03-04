@@ -54,7 +54,7 @@ func (f *ClientFactory) New(ctx context.Context, s settings.Source, path string,
 			return nil, fmt.Errorf("failed to load component %v: %s", c, err.Error())
 		}
 		for offset, en := range enabled {
-			if strings.ToUpper(en) == strings.ToUpper(g.Name()) {
+			if strings.EqualFold(en, g.Name()) {
 				loadedComponents[offset] = loadedComponent
 			}
 		}
