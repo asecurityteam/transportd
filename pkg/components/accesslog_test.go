@@ -24,8 +24,11 @@ func TestAccessLog(t *testing.T) {
 		context.WithValue(req.Context(), http.LocalAddrContextKey, &net.IPAddr{Zone: "", IP: net.ParseIP("127.0.0.1")}),
 	)
 	req = req.WithContext(logevent.NewContext(req.Context(), logger))
+	req.Header.Add("X-Slauth-Subject", "some-user")
 	logger.EXPECT().Info(gomock.Any()).Do(func(event interface{}) {
 		assert.IsType(t, accessLog{}, event, "middleware did not perform an access log")
+		log := event.(accessLog)
+		assert.Equal(t, "some-user", log.Principal, "Principal was expected to be 'some-user'")
 	})
 	resp := &http.Response{
 		Status:     "200 OK",

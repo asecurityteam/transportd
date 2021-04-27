@@ -23,6 +23,7 @@ type accessLog struct {
 	HTTPMethod             string   `logevent:"http_method"`
 	HTTPReferrer           string   `logevent:"http_referrer"`
 	HTTPUserAgent          string   `logevent:"http_user_agent"`
+	Principal              string   `logevent:"principal"`
 	URIPath                string   `logevent:"uri_path"`
 	URIQuery               string   `logevent:"uri_query"`
 	Scheme                 string   `logevent:"scheme"`
@@ -51,6 +52,7 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 		Port:                   dstPort,
 		SourceIP:               srcIP,
 		Site:                   r.Host,
+		Principal:              r.Header.Get("X-Slauth-Subject"),
 		HTTPRequestContentType: r.Header.Get("Content-Type"),
 		HTTPMethod:             r.Method,
 		HTTPReferrer:           r.Referer(),
