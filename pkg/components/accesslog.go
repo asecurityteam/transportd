@@ -38,7 +38,8 @@ type accessLog struct {
 }
 
 type loggingTransport struct {
-	Wrapped http.RoundTripper
+	Wrapped         http.RoundTripper
+	PrincipalHeader string
 }
 
 // RoundTrip writes structured access logs for the request.
@@ -52,7 +53,7 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 		Port:                   dstPort,
 		SourceIP:               srcIP,
 		Site:                   r.Host,
-		Principal:              r.Header.Get("X-Slauth-Subject"),
+		Principal:              r.Header.Get(c.PrincipalHeader),
 		HTTPRequestContentType: r.Header.Get("Content-Type"),
 		HTTPMethod:             r.Method,
 		HTTPReferrer:           r.Referer(),
@@ -75,7 +76,9 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 }
 
 // AccessLogConfig modifies the behavior of the access logs.
-type AccessLogConfig struct{}
+type AccessLogConfig struct {
+	PrincipalHeader string `description:"Name of Header that describes the principal of the request."`
+}
 
 // Name of the config root.
 func (*AccessLogConfig) Name() string {
@@ -92,12 +95,14 @@ func AccessLog(_ context.Context, _ string, _ string, _ string) (interface{}, er
 
 // Settings generates a config populated with defaults.
 func (m *AccessLogComponent) Settings() *AccessLogConfig {
-	return &AccessLogConfig{}
+	return &AccessLogConfig{
+		PrincipalHeader: "X-Slauth-Subject",
+	}
 }
 
 // New generates the middleware.
 func (*AccessLogComponent) New(ctx context.Context, conf *AccessLogConfig) (func(http.RoundTripper) http.RoundTripper, error) {
 	return func(next http.RoundTripper) http.RoundTripper {
-		return &loggingTransport{Wrapped: next}
+		return &loggingTransport{Wrapped: next, PrincipalHeader: conf.PrincipalHeader}
 	}, nil
 }
