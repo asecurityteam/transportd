@@ -221,7 +221,7 @@ x-transportd:
     timing: "http.client.timing"
   accesslog:
     # (string) Name of Header to check for principal of request.
-    principalheader: "SUBJECT-HEADER"
+    principalheader: "X-Principal"
   asapvalidate:
     # ([]string) Public key download URLs.
     keyurls:

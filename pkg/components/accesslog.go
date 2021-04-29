@@ -96,7 +96,7 @@ func AccessLog(_ context.Context, _ string, _ string, _ string) (interface{}, er
 // Settings generates a config populated with defaults.
 func (m *AccessLogComponent) Settings() *AccessLogConfig {
 	return &AccessLogConfig{
-		PrincipalHeader: "X-Slauth-Subject",
+		PrincipalHeader: "X-Principal",
 	}
 }
 
