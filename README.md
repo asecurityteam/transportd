@@ -193,7 +193,7 @@ x-transportd:
   # (string) Backend target for this route.
   backend: "backendName"
   metrics:
-    # (string) Name of the tag containing the path referecne.
+    # (string) Name of the tag containing the path reference.
     pathtag: "client_path"
     # (string) Name of the tag containing the backend reference.
     backendtag: "client_dependency"
@@ -219,6 +219,9 @@ x-transportd:
     dns: "http.client.dns.timing"
     # (string) Name of overall timing metric.
     timing: "http.client.timing"
+  accesslog:
+    # (string) Name of Header to check for principal of request.
+    principalheader: "X-Principal"
   asapvalidate:
     # ([]string) Public key download URLs.
     keyurls:
