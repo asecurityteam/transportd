@@ -11,7 +11,7 @@ import (
 	"github.com/asecurityteam/runhttp"
 	"github.com/asecurityteam/settings"
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/getkin/kin-openapi/openapi3filter"
+	legacyrouter "github.com/getkin/kin-openapi/routers/legacy"
 )
 
 type contextKey string
@@ -33,18 +33,18 @@ const (
 	allowUnknown = "allowUnknown"
 )
 
-func newSpecification(source []byte) (*openapi3.Swagger, error) {
+func newSpecification(source []byte) (*openapi3.T, error) {
 	envProcessor := NewEnvProcessor()
 	source, err := envProcessor.Process(source)
 	if err != nil {
 		return nil, err
 	}
 
-	loader := openapi3.NewSwaggerLoader()
-	swagger, errYaml := loader.LoadSwaggerFromData(source)
+	loader := openapi3.NewLoader()
+	swagger, errYaml := loader.LoadFromData(source)
 	var errJSON error
 	if errYaml != nil {
-		swagger, errJSON = loader.LoadSwaggerFromData(source)
+		swagger, errJSON = loader.LoadFromData(source)
 	}
 	if errYaml != nil && errJSON != nil {
 		return nil, errJSON
@@ -52,9 +52,8 @@ func newSpecification(source []byte) (*openapi3.Swagger, error) {
 	return swagger, nil
 }
 
-func newTransport(ctx context.Context, specification *openapi3.Swagger, components ...NewComponent) (http.RoundTripper, error) {
-	router := openapi3filter.NewRouter()
-	err := router.AddSwagger(specification)
+func newTransport(ctx context.Context, specification *openapi3.T, components ...NewComponent) (http.RoundTripper, error) {
+	router, err := legacyrouter.NewRouter(specification)
 	if err != nil {
 		return nil, err
 	}

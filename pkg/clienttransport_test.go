@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/getkin/kin-openapi/openapi3filter"
+	legacyrouter "github.com/getkin/kin-openapi/routers/legacy"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
@@ -67,10 +67,10 @@ func TestClientTransport(t *testing.T) {
 
 	cl := NewMockRoundTripper(ctrl)
 	reg := NewMockClientRegistry(ctrl)
-	loader := openapi3.NewSwaggerLoader()
-	spec, _ := loader.LoadSwaggerFromData([]byte(spectxt))
-	router := openapi3filter.NewRouter()
-	assert.Nil(t, router.AddSwagger(spec))
+	loader := openapi3.NewLoader()
+	spec, _ := loader.LoadFromData([]byte(spectxt))
+	router, err := legacyrouter.NewRouter(spec)
+	assert.Nil(t, err)
 	rt := &ClientTransport{
 		Registry: reg,
 		Router:   router,
@@ -83,7 +83,7 @@ func TestClientTransport(t *testing.T) {
 		assert.Equal(t, "/hello", route.Path)
 		assert.Equal(t, http.MethodGet, route.Method)
 	})
-	_, err := rt.RoundTrip(req)
+	_, err = rt.RoundTrip(req)
 	assert.Nil(t, err)
 }
 
@@ -92,10 +92,10 @@ func TestClientTransportNotFound(t *testing.T) {
 	defer ctrl.Finish()
 
 	reg := NewMockClientRegistry(ctrl)
-	loader := openapi3.NewSwaggerLoader()
-	spec, _ := loader.LoadSwaggerFromData([]byte(spectxt))
-	router := openapi3filter.NewRouter()
-	assert.Nil(t, router.AddSwagger(spec))
+	loader := openapi3.NewLoader()
+	spec, _ := loader.LoadFromData([]byte(spectxt))
+	router, err := legacyrouter.NewRouter(spec)
+	assert.Nil(t, err)
 	rt := &ClientTransport{
 		Registry: reg,
 		Router:   router,
@@ -114,10 +114,10 @@ func TestClientTransportPassthrough(t *testing.T) {
 
 	cl := NewMockRoundTripper(ctrl)
 	reg := NewMockClientRegistry(ctrl)
-	loader := openapi3.NewSwaggerLoader()
-	spec, _ := loader.LoadSwaggerFromData([]byte(spectxt))
-	router := openapi3filter.NewRouter()
-	assert.Nil(t, router.AddSwagger(spec))
+	loader := openapi3.NewLoader()
+	spec, _ := loader.LoadFromData([]byte(spectxt))
+	router, err := legacyrouter.NewRouter(spec)
+	assert.Nil(t, err)
 	rt := &ClientTransport{
 		Registry: reg,
 		Router:   router,
@@ -130,6 +130,6 @@ func TestClientTransportPassthrough(t *testing.T) {
 		assert.Equal(t, http.MethodGet, route.Method)
 	})
 
-	_, err := rt.RoundTrip(req)
+	_, err = rt.RoundTrip(req)
 	assert.Nil(t, err)
 }

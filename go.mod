@@ -15,7 +15,7 @@ require (
 	github.com/asecurityteam/runhttp v0.3.0
 	github.com/asecurityteam/settings v0.4.0
 	github.com/asecurityteam/transport v1.6.2
-	github.com/getkin/kin-openapi v0.0.0-20190729060947-8785b416cb32
+	github.com/getkin/kin-openapi v0.63.0
 	github.com/gobuffalo/buffalo-plugins v1.13.0 // indirect
 	github.com/gobuffalo/gogen v0.0.0-20190224213239-1c6076128bbc // indirect
 	github.com/gobuffalo/logger v0.0.0-20190224201004-be78ebfea0fa // indirect
@@ -25,14 +25,9 @@ require (
 	github.com/gobuffalo/syncx v0.0.0-20190224160051-33c29581e754 // indirect
 	github.com/golang/mock v1.5.0
 	github.com/google/uuid v1.1.1 // indirect
-	github.com/justinas/alice v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.2.2 // indirect
-	github.com/rs/cors v1.7.0 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
-	golang.org/x/net v0.0.0-20190930134127-c5a3c61f89f3 // indirect
-	gopkg.in/yaml.v2 v2.2.3 // indirect
-	rsc.io/quote/v3 v3.1.0 // indirect
 )
 
 replace git.apache.org/thrift.git => github.com/apache/thrift v0.0.0-20180902110319-2566ecd5d999
