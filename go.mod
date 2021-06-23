@@ -16,16 +16,8 @@ require (
 	github.com/asecurityteam/settings v0.4.0
 	github.com/asecurityteam/transport v1.6.2
 	github.com/getkin/kin-openapi v0.63.0
-	github.com/gobuffalo/buffalo-plugins v1.13.0 // indirect
-	github.com/gobuffalo/gogen v0.0.0-20190224213239-1c6076128bbc // indirect
-	github.com/gobuffalo/logger v0.0.0-20190224201004-be78ebfea0fa // indirect
-	github.com/gobuffalo/meta v0.0.0-20190207205153-50a99e08b8cf // indirect
-	github.com/gobuffalo/packd v0.0.0-20190224160250-d04dd98aca5b // indirect
-	github.com/gobuffalo/packr/v2 v2.0.1
-	github.com/gobuffalo/syncx v0.0.0-20190224160051-33c29581e754 // indirect
 	github.com/golang/mock v1.5.0
 	github.com/google/uuid v1.1.1 // indirect
-	github.com/rogpeppe/go-internal v1.2.2 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
 )
