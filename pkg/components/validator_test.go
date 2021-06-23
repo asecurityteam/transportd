@@ -10,7 +10,7 @@ import (
 
 	transportd "github.com/asecurityteam/transportd/pkg"
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/getkin/kin-openapi/openapi3filter"
+	legacyrouter "github.com/getkin/kin-openapi/routers/legacy"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
@@ -109,17 +109,17 @@ func TestValidateRequest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
+	swagger, err := openapi3.NewLoader().LoadFromData([]byte(validatorYaml))
 	assert.Nil(t, err)
-	router := openapi3filter.NewRouter()
-	assert.Nil(t, router.AddSwagger(swagger))
+	router, err := legacyrouter.NewRouter(swagger)
+	assert.Nil(t, err)
 
 	for _, tt := range tests {
 		rt := NewMockRoundTripper(ctrl)
 		c := &inputValidatingTransport{Wrapped: rt}
 		req, _ := http.NewRequest(http.MethodGet, tt.url, http.NoBody)
 
-		route, pathParams, err := router.FindRoute(req.Method, req.URL)
+		route, pathParams, err := router.FindRoute(req)
 		assert.Nil(t, err)
 		req = req.WithContext(transportd.RouteToContext(req.Context(), route))
 		req = req.WithContext(transportd.PathParamsToContext(req.Context(), pathParams))
@@ -229,17 +229,17 @@ func TestValidateResponse(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData([]byte(validatorYaml))
+	swagger, err := openapi3.NewLoader().LoadFromData([]byte(validatorYaml))
 	assert.Nil(t, err)
-	router := openapi3filter.NewRouter()
-	assert.Nil(t, router.AddSwagger(swagger))
+	router, err := legacyrouter.NewRouter(swagger)
+	assert.Nil(t, err)
 
 	for _, tt := range tests {
 		rt := NewMockRoundTripper(ctrl)
 		c := &outputValidatingTransport{Wrapped: rt}
 		req, _ := http.NewRequest(http.MethodGet, "https://localhost/hello?name=test1&name2=test2", http.NoBody)
 		req.Header.Set("Accept-Encoding", "gzip")
-		route, pathParams, err := router.FindRoute(req.Method, req.URL)
+		route, pathParams, err := router.FindRoute(req)
 		assert.Nil(t, err)
 		req = req.WithContext(transportd.RouteToContext(req.Context(), route))
 		req = req.WithContext(transportd.PathParamsToContext(req.Context(), pathParams))
