@@ -1,6 +1,6 @@
 module github.com/asecurityteam/transportd
 
-go 1.13
+go 1.16
 
 require (
 	bitbucket.org/atlassian/go-asap v0.0.0-20190921160616-bb88d6193af9

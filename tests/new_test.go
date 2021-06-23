@@ -4,7 +4,7 @@ package inttest
 
 import (
 	"context"
-	"io/ioutil"
+	"embed"
 	"path"
 	"testing"
 
@@ -18,8 +18,11 @@ type tc struct {
 	WantErr bool
 }
 
+//go:embed specs
+var specs embed.FS
+
 func TestNewService(t *testing.T) {
-	folder := "./specs/"
+	folder := "specs"
 
 	tcs := []tc{
 		{
@@ -42,7 +45,7 @@ func TestNewService(t *testing.T) {
 	for _, tt := range tcs {
 		t.Run(tt.Name, func(t *testing.T) {
 			filePath := path.Join(folder, tt.File)
-			fileInput, err := ioutil.ReadFile(filePath)
+			fileInput, err := specs.ReadFile(filePath)
 			if err != nil {
 				t.Errorf("New() error = %v, wantErr %v", err, tt.WantErr)
 			}
