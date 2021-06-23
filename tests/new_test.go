@@ -4,6 +4,8 @@ package inttest
 
 import (
 	"context"
+	"io/ioutil"
+	"path"
 	"testing"
 
 	transportd "github.com/asecurityteam/transportd/pkg"
@@ -12,7 +14,7 @@ import (
 
 type tc struct {
 	Name    string
-	Spec    []byte
+	File    string
 	WantErr bool
 }
 
@@ -39,7 +41,8 @@ func TestNewService(t *testing.T) {
 
 	for _, tt := range tcs {
 		t.Run(tt.Name, func(t *testing.T) {
-			fileInput, err := ioutil.ReadFile(folder + tt.File)
+			filePath := path.Join(folder, tt.File)
+			fileInput, err := ioutil.ReadFile(filePath)
 			if err != nil {
 				t.Errorf("New() error = %v, wantErr %v", err, tt.WantErr)
 			}
