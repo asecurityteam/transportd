@@ -31,6 +31,8 @@ github.com/asecurityteam/settings v0.4.0 h1:L7fK4WqkvnvglBrfLBgp77LUDR2cxfSNWGFe
 github.com/asecurityteam/settings v0.4.0/go.mod h1:frhlF5kT7WvdiRX3eQlCOjSppbYUfxxjM9xKTvYjcGo=
 github.com/asecurityteam/transport v1.6.2 h1:zJCl1671VSeenGxvx+RWRtcBj57VFZL4UI6gBIF80fw=
 github.com/asecurityteam/transport v1.6.2/go.mod h1:qfuYUhtdNiKiwrTAwCuBC2kZuLIyhHHYp5AleGc6uAE=
+github.com/asecurityteam/transport v1.6.3 h1:ALJ61/r2wzRKQzw6Nl5c3ntPNnNIkGPG8WRSr+s4ErE=
+github.com/asecurityteam/transport v1.6.3/go.mod h1:qfuYUhtdNiKiwrTAwCuBC2kZuLIyhHHYp5AleGc6uAE=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

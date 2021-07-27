@@ -14,7 +14,7 @@ require (
 	github.com/asecurityteam/logevent v1.5.0
 	github.com/asecurityteam/runhttp v0.3.0
 	github.com/asecurityteam/settings v0.4.0
-	github.com/asecurityteam/transport v1.6.2
+	github.com/asecurityteam/transport v1.6.3
 	github.com/getkin/kin-openapi v0.63.0
 	github.com/golang/mock v1.5.0
 	github.com/google/uuid v1.1.1 // indirect
