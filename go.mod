@@ -16,7 +16,7 @@ require (
 	github.com/asecurityteam/settings v0.4.0
 	github.com/asecurityteam/transport v1.6.3
 	github.com/getkin/kin-openapi v0.67.0
-	github.com/golang/mock v1.5.0
+	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
