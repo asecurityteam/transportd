@@ -26,6 +26,8 @@ github.com/asecurityteam/logevent v1.5.0 h1:3zuGGhAY/x7XLK65lT0JEov/8vRYUwwTRrB6
 github.com/asecurityteam/logevent v1.5.0/go.mod h1:honZzywisDv/eTdOIWaNjJ1p0zgCG68zARUkr35CYDA=
 github.com/asecurityteam/runhttp v0.3.0 h1:kVrx2RhneswdwTZyCsNMJLfVfqNnT3LCORh4rY2HtqE=
 github.com/asecurityteam/runhttp v0.3.0/go.mod h1:AQv7kF4vXrd8ih9Ebh9xL0cAUrtdF2irmWSsBqinf0c=
+github.com/asecurityteam/runhttp v0.4.0 h1:V0sjkLA7Onkmpnnu574yQL8k9g4JEtyDvWnmJ2fTZ4s=
+github.com/asecurityteam/runhttp v0.4.0/go.mod h1:dxiW787QEACjoGlcgcbzGO90IY//PsV6d45Mf4kQVME=
 github.com/asecurityteam/settings v0.1.0/go.mod h1:Wb6bajm1AgHtjLP8ecv7RqUTCX1hvrIhgX4sF3Ras8c=
 github.com/asecurityteam/settings v0.4.0 h1:L7fK4WqkvnvglBrfLBgp77LUDR2cxfSNWGFex7lrMK0=
 github.com/asecurityteam/settings v0.4.0/go.mod h1:frhlF5kT7WvdiRX3eQlCOjSppbYUfxxjM9xKTvYjcGo=
@@ -45,6 +47,8 @@ github.com/getkin/kin-openapi v0.67.0 h1:FGVL6Rs2ZWx/RrWdoRfqw74mrkClHOg3rW6knMk
 github.com/getkin/kin-openapi v0.67.0/go.mod h1:7Yn5whZr5kJi6t+kShccXS8ae1APpYTW6yheSwk8Yi4=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
+github.com/go-chi/chi v4.0.3+incompatible h1:gakN3pDJnzZN5jqFV2TEdF66rTfKeITyR8qu6ekICEY=
+github.com/go-chi/chi v4.0.3+incompatible/go.mod h1:eB3wogJHnLi3x/kFX2A+IbTBlXxmMeXJVKy9tTv1XzQ=
 github.com/go-openapi/jsonpointer v0.19.5 h1:gZr+CIYByUqjcgeLXnQu2gHYQC9o73G2XUeOFYEICuY=
 github.com/go-openapi/jsonpointer v0.19.5/go.mod h1:Pl9vOtqEWErmShwVjC8pYs9cog34VGT37dQOVbmoatg=
 github.com/go-openapi/swag v0.19.5 h1:lTz6Ys4CmqqCQmZPBlbQENR1/GucA2bzYTE12Pw4tFY=

@@ -12,7 +12,7 @@ require (
 	github.com/asecurityteam/component-stat v0.2.0 // indirect
 	github.com/asecurityteam/httpstats v0.0.0-20200806153718-d71ff7ed1047
 	github.com/asecurityteam/logevent v1.5.0
-	github.com/asecurityteam/runhttp v0.3.0
+	github.com/asecurityteam/runhttp v0.4.0
 	github.com/asecurityteam/settings v0.4.0
 	github.com/asecurityteam/transport v1.6.3
 	github.com/getkin/kin-openapi v0.67.0
