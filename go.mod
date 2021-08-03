@@ -15,7 +15,7 @@ require (
 	github.com/asecurityteam/runhttp v0.4.0
 	github.com/asecurityteam/settings v0.4.0
 	github.com/asecurityteam/transport v1.6.3
-	github.com/getkin/kin-openapi v0.67.0
+	github.com/getkin/kin-openapi v0.69.0
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/stretchr/testify v1.7.0
