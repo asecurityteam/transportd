@@ -19,7 +19,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/stretchr/testify v1.7.0
-	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
+	github.com/vincent-petithory/dataurl v0.0.0-20191104211930-d1553a71de50
 )
 
 replace git.apache.org/thrift.git => github.com/apache/thrift v0.0.0-20180902110319-2566ecd5d999
