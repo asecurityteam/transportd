@@ -7,17 +7,15 @@ require (
 	github.com/SermoDigital/jose v0.9.2-0.20161205224733-f6df55f235c2
 	github.com/asecurityteam/component-connstate v0.2.0 // indirect
 	github.com/asecurityteam/component-expvar v0.2.0 // indirect
-	github.com/asecurityteam/component-log v0.2.0 // indirect
 	github.com/asecurityteam/component-signals v0.2.0 // indirect
 	github.com/asecurityteam/component-stat v0.2.0 // indirect
 	github.com/asecurityteam/httpstats v0.0.0-20200806153718-d71ff7ed1047
-	github.com/asecurityteam/logevent v1.5.0
-	github.com/asecurityteam/runhttp v0.4.0
+	github.com/asecurityteam/logevent v1.6.1
+	github.com/asecurityteam/runhttp v0.4.2
 	github.com/asecurityteam/settings v0.4.0
-	github.com/asecurityteam/transport v1.6.3
+	github.com/asecurityteam/transport v1.6.5
 	github.com/getkin/kin-openapi v0.69.0
 	github.com/golang/mock v1.6.0
-	github.com/google/uuid v1.1.1 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
 )
