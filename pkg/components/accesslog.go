@@ -2,6 +2,7 @@ package components
 
 import (
 	"context"
+	"io"
 	"net"
 	"net/http"
 	"strconv"
@@ -68,8 +69,16 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	if e == nil {
 		a.Status = resp.StatusCode
 		a.HTTPContentType = resp.Header.Get("Content-Type")
+		if resp.StatusCode > 399 {
+			respData, err := io.ReadAll(resp.Body)
+			if err != nil {
+				runhttp.LoggerFromContext(r.Context()).Error(err)
+			}
+			a.Message = string(respData)
+		}
 	} else {
 		a.Status = transportd.ErrorToStatusCode(e)
+		a.Message = e.Error()
 	}
 	runhttp.LoggerFromContext(r.Context()).Info(a)
 	return resp, e
