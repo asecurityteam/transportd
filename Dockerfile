@@ -1,4 +1,4 @@
-FROM asecurityteam/sdcli:v1 AS BUILDER
+FROM asecurityteam/sdcli:v2 AS BUILDER
 RUN mkdir -p /go/src/github.com/asecurityteam/transportd
 WORKDIR /go/src/github.com/asecurityteam/transportd
 COPY --chown=sdcli:sdcli . .
