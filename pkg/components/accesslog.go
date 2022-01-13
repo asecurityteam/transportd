@@ -69,7 +69,7 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	if e == nil {
 		a.Status = resp.StatusCode
 		a.HTTPContentType = resp.Header.Get("Content-Type")
-		if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		if resp.StatusCode > 399 {
 			respData, err := io.ReadAll(resp.Body)
 			if err != nil {
 				runhttp.LoggerFromContext(r.Context()).Error(err)
@@ -78,6 +78,7 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 		}
 	} else {
 		a.Status = transportd.ErrorToStatusCode(e)
+		a.Message = e.Error()
 	}
 	runhttp.LoggerFromContext(r.Context()).Info(a)
 	return resp, e
