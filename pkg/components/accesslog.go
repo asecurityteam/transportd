@@ -89,7 +89,8 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 func (c *loggingTransport) getPrincipal(r *http.Request) string {
 	potentialHeaders := strings.Split(c.PrincipalHeader, ",")
 	for _, header := range potentialHeaders {
-		principal := r.Header.Get(header)
+		cleanHeader := strings.TrimSpace(header)
+		principal := r.Header.Get(cleanHeader)
 		if len(principal) > 0 {
 			return principal
 		}
