@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/asecurityteam/runhttp"
@@ -54,7 +55,7 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 		Port:                   dstPort,
 		SourceIP:               srcIP,
 		Site:                   r.Host,
-		Principal:              r.Header.Get(c.PrincipalHeader),
+		Principal:              c.getPrincipal(r),
 		HTTPRequestContentType: r.Header.Get("Content-Type"),
 		HTTPMethod:             r.Method,
 		HTTPReferrer:           r.Referer(),
@@ -84,9 +85,21 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return resp, e
 }
 
+// getPrincipal takes the comma delimited list of potential principal headers and returns the first non-empty header value
+func (c *loggingTransport) getPrincipal(r *http.Request) string {
+	potentialHeaders := strings.Split(c.PrincipalHeader, ",")
+	for _, header := range potentialHeaders {
+		principal := r.Header.Get(header)
+		if len(principal) > 0 {
+			return principal
+		}
+	}
+	return ""
+}
+
 // AccessLogConfig modifies the behavior of the access logs.
 type AccessLogConfig struct {
-	PrincipalHeader string `description:"Name of Header that describes the principal of the request."`
+	PrincipalHeader string `description:"List of Headers that describes the principal of the request. This is a fallback system, the first non empty value will be used."`
 }
 
 // Name of the config root.
