@@ -220,7 +220,7 @@ x-transportd:
     # (string) Name of overall timing metric.
     timing: "http.client.timing"
   accesslog:
-    # (string) Name of Header to check for principal of request.
+    # (string) Name(s) of Header(s) to check for principal of request. Comma delimited list as a string, where each item is a fallback in case the other values are empty. 
     principalheader: "X-Principal"
   asapvalidate:
     # ([]string) Public key download URLs.
