@@ -1,8 +1,10 @@
 package components
 
 import (
+	"bytes"
 	"context"
 	"io"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"strconv"
@@ -76,6 +78,7 @@ func (c *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 				runhttp.LoggerFromContext(r.Context()).Error(err)
 			}
 			a.Message = string(respData)
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(respData))
 		}
 	} else {
 		a.Status = transportd.ErrorToStatusCode(e)
