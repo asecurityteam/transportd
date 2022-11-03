@@ -16,9 +16,10 @@ var (
 
 // RetryConfig enables automated retries for status codes.
 type RetryConfig struct {
-	Codes   []int         `description:"HTTP status codes that trigger a retry."`
-	Limit   int           `description:"Maximum retry attempts."`
-	Backoff time.Duration `description:"Time to wait between requests."`
+	Codes       []int         `description:"HTTP status codes that trigger a retry."`
+	Limit       int           `description:"Maximum retry attempts."`
+	Backoff     time.Duration `description:"Time to wait between requests."`
+	Exponential bool          `description:"Double the time to wait between requests."`
 }
 
 // Name of the configuration root.
@@ -45,9 +46,13 @@ func (*RetryComponent) Settings() *RetryConfig {
 
 // New generates the middleware.
 func (*RetryComponent) New(_ context.Context, conf *RetryConfig) (func(http.RoundTripper) http.RoundTripper, error) { // nolint
+	backoffPolicy := transport.NewFixedBackoffPolicy(conf.Backoff)
+	if conf.Exponential {
+		backoffPolicy = transport.NewExponentialBackoffPolicy(conf.Backoff)
+	}
 	return transport.NewRetrier(
 		transport.NewPercentJitteredBackoffPolicy(
-			transport.NewFixedBackoffPolicy(conf.Backoff),
+			backoffPolicy,
 			.20,
 		),
 		transport.NewLimitedRetryPolicy(

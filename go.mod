@@ -9,7 +9,7 @@ require (
 	github.com/asecurityteam/logevent v1.6.1
 	github.com/asecurityteam/runhttp v0.4.2
 	github.com/asecurityteam/settings v0.4.0
-	github.com/asecurityteam/transport v1.6.5
+	github.com/asecurityteam/transport v1.6.7
 	github.com/getkin/kin-openapi v0.69.0
 	github.com/golang/mock v1.6.0
 	github.com/stretchr/testify v1.7.0

@@ -263,6 +263,8 @@ x-transportd:
       - 509
       - 510
       - 511
+    # (bool) Double the time to wait between requests.
+    exponential: "false"
   asaptoken:
     # ([]string) JWT audience values to include in tokens.
     audiences:
