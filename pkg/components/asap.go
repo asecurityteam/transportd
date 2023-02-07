@@ -141,8 +141,8 @@ func (*ASAPTokenComponent) New(ctx context.Context, conf *ASAPTokenConfig) (func
 	if len(conf.KID) < 1 {
 		return nil, fmt.Errorf("kid value is empty")
 	}
-	if conf.TTL == 0 || conf.TTL < 0 {
-		return nil, fmt.Errorf("ttl duration is invalid: %s", conf.TTL)
+	if conf.TTL <= 0 {
+		return nil, fmt.Errorf("ttl duration is less than or equal to zero")
 	}
 	rawKey := conf.PrivateKey
 	if strings.HasPrefix(rawKey, "data:") {
