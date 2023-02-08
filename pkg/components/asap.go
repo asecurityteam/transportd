@@ -115,6 +115,11 @@ func ASAPToken(_ context.Context, _ string, _ string, _ string) (interface{}, er
 	return &ASAPTokenComponent{}, nil
 }
 
+// NewComponent populates an ASAPToken with defaults.
+func NewComponent() *ASAPTokenComponent {
+	return &ASAPTokenComponent{}
+}
+
 // Settings generates a config populated with defaults.
 func (m *ASAPTokenComponent) Settings() *ASAPTokenConfig {
 	return &ASAPTokenConfig{}
@@ -133,6 +138,9 @@ func (*ASAPTokenComponent) New(ctx context.Context, conf *ASAPTokenConfig) (func
 	}
 	if len(conf.KID) < 1 {
 		return nil, fmt.Errorf("kid value is empty")
+	}
+	if conf.TTL <= 0 {
+		return nil, fmt.Errorf("ttl duration is less than or equal to zero")
 	}
 	rawKey := conf.PrivateKey
 	if strings.HasPrefix(rawKey, "data:") {

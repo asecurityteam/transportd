@@ -215,6 +215,26 @@ func TestASAPTokenComponent_New(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "invalid TTL - zero",
+			conf: &ASAPTokenConfig{
+				PrivateKey: string(pk),
+				KID:        kid,
+				TTL:        0,
+				Issuer:     iss,
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid TTL - negative",
+			conf: &ASAPTokenConfig{
+				PrivateKey: string(pk),
+				KID:        kid,
+				TTL:        time.Second * -1,
+				Issuer:     iss,
+			},
+			wantErr: true,
+		},
+		{
 			name: "success",
 			conf: &ASAPTokenConfig{
 				PrivateKey: string(pk),
