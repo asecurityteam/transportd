@@ -122,9 +122,7 @@ func NewComponent() *ASAPTokenComponent {
 
 // Settings generates a config populated with defaults.
 func (m *ASAPTokenComponent) Settings() *ASAPTokenConfig {
-	return &ASAPTokenConfig{
-		TTL: time.Minute * 60,
-	}
+	return &ASAPTokenConfig{}
 }
 
 // New generates the middleware.
