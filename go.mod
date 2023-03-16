@@ -5,7 +5,8 @@ go 1.17
 require (
 	bitbucket.org/atlassian/go-asap v0.0.0-20190921160616-bb88d6193af9
 	github.com/SermoDigital/jose v0.9.2-0.20161205224733-f6df55f235c2
-	github.com/asecurityteam/httpstats v0.0.0-20200806153718-d71ff7ed1047
+	github.com/asecurityteam/httpstats v0.0.0-20211027173738-4a1cfc686f5b
+	github.com/asecurityteam/httpstats/v2 v2.3.0
 	github.com/asecurityteam/logevent v1.6.1
 	github.com/asecurityteam/runhttp v0.4.2
 	github.com/asecurityteam/settings v0.4.0
