@@ -13,7 +13,7 @@ require (
 	github.com/getkin/kin-openapi v0.69.0
 	github.com/golang/mock v1.6.0
 	github.com/stretchr/testify v1.7.0
-	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
+	github.com/vincent-petithory/dataurl v1.0.0
 )
 
 require (
