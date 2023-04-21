@@ -45,9 +45,7 @@ func (*RequestHeaderComponent) New(_ context.Context, conf *RequestHeaderConfig)
 	}
 
 	ch := make(transport.Chain, 0, length)
-	var headerName string
-	var headerValues []string
-	for headerName, headerValues = range conf.Headers {
+	for headerName, headerValues := range conf.Headers {
 		for _, headerValue := range headerValues {
 			ch = append(ch, makeRequestDecorator(headerName, headerValue))
 		}

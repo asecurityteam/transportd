@@ -3,7 +3,7 @@ package components
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 
@@ -56,7 +56,7 @@ func TestResponseHeaderInjection(t *testing.T) {
 			"One":  []string{"NOT A"},
 			"Four": []string{"d"},
 		},
-		Body: ioutil.NopCloser(bytes.NewReader([]byte(""))),
+		Body: io.NopCloser(bytes.NewReader([]byte(""))),
 	}
 
 	rt.EXPECT().RoundTrip(gomock.Any()).Return(mockResponse, nil)
