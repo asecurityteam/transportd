@@ -453,7 +453,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 
 	transportd "github.com/asecurityteam/transportd/pkg"

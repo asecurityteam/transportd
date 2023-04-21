@@ -3,7 +3,7 @@ package components
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -26,6 +26,6 @@ func newError(code int, reason string) *http.Response {
 		Status:     http.StatusText(code),
 		StatusCode: code,
 		Header:     http.Header{"Content-Type": []string{"application/json"}},
-		Body:       ioutil.NopCloser(bytes.NewReader(b)),
+		Body:       io.NopCloser(bytes.NewReader(b)),
 	}
 }

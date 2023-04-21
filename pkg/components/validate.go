@@ -5,7 +5,6 @@ import (
 	"compress/gzip"
 	"context"
 	"io"
-	"io/ioutil"
 	"net/http"
 
 	transportd "github.com/asecurityteam/transportd/pkg"
@@ -76,11 +75,11 @@ func (r *outputValidatingTransport) RoundTrip(req *http.Request) (*http.Response
 	}
 	// restore the old path just in case something else modified it from the path in the specification
 	req.URL.Path = originalPath
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	resp.Body = ioutil.NopCloser(bytes.NewReader(body))
+	resp.Body = io.NopCloser(bytes.NewReader(body))
 
 	route := transportd.RouteFromContext(req.Context())
 	params := transportd.PathParamsFromContext(req.Context())
@@ -102,7 +101,7 @@ func (r *outputValidatingTransport) RoundTrip(req *http.Request) (*http.Response
 		}
 		defer reader.Close()
 	default:
-		reader = ioutil.NopCloser(bytes.NewReader(body))
+		reader = io.NopCloser(bytes.NewReader(body))
 	}
 	input := &openapi3filter.ResponseValidationInput{
 		RequestValidationInput: reqInput,

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 
@@ -140,7 +140,7 @@ func TestValidateResponse(t *testing.T) {
 	_, err := zw.Write([]byte(body))
 	assert.Nil(t, err)
 	assert.Nil(t, zw.Close())
-	compressedBody, err := ioutil.ReadAll(&buf)
+	compressedBody, err := io.ReadAll(&buf)
 	assert.Nil(t, err)
 
 	tests := []struct {
@@ -156,7 +156,7 @@ func TestValidateResponse(t *testing.T) {
 				StatusCode: http.StatusOK,
 				Status:     "200 OK",
 				Header:     http.Header{"Content-Type": []string{"application/json"}},
-				Body:       ioutil.NopCloser(bytes.NewBufferString(body)),
+				Body:       io.NopCloser(bytes.NewBufferString(body)),
 			},
 			responseErr: nil,
 			expectedErr: false,
@@ -167,7 +167,7 @@ func TestValidateResponse(t *testing.T) {
 			response: &http.Response{
 				StatusCode: http.StatusOK,
 				Status:     "200 OK",
-				Body:       ioutil.NopCloser(bytes.NewBufferString(body)),
+				Body:       io.NopCloser(bytes.NewBufferString(body)),
 			},
 			responseErr: nil,
 			expectedErr: false,
@@ -182,7 +182,7 @@ func TestValidateResponse(t *testing.T) {
 					"Content-Type":     []string{"application/json"},
 					"Content-Encoding": []string{"gzip"},
 				},
-				Body: ioutil.NopCloser(bytes.NewReader(compressedBody)),
+				Body: io.NopCloser(bytes.NewReader(compressedBody)),
 			},
 			responseErr: nil,
 			expectedErr: false,
@@ -196,7 +196,7 @@ func TestValidateResponse(t *testing.T) {
 				Header: http.Header{
 					"Content-Type": []string{"application/json"},
 				},
-				Body: ioutil.NopCloser(bytes.NewReader(compressedBody)),
+				Body: io.NopCloser(bytes.NewReader(compressedBody)),
 			},
 			responseErr: nil,
 			expectedErr: false,
@@ -211,7 +211,7 @@ func TestValidateResponse(t *testing.T) {
 					"Content-Type":     []string{"application/json"},
 					"Content-Encoding": []string{"gzip"},
 				},
-				Body: ioutil.NopCloser(bytes.NewBufferString(body)),
+				Body: io.NopCloser(bytes.NewBufferString(body)),
 			},
 			responseErr: nil,
 			expectedErr: true,

@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	transportd "github.com/asecurityteam/transportd/pkg"
@@ -41,7 +40,7 @@ func main() {
 	}
 	var errRead error
 	if fileName != "" {
-		fileContent, errRead = ioutil.ReadFile(fileName)
+		fileContent, errRead = os.ReadFile(fileName)
 		if errRead != nil {
 			panic(errRead)
 		}

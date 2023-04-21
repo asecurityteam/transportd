@@ -91,7 +91,9 @@ func (*ResponseHeaderComponent) New(_ context.Context, conf *ResponseHeaderConfi
 	}
 
 	ch := make(transport.Chain, 0, length)
-	for headerName, headerValues := range conf.Headers {
+	var headerName string
+	var headerValues []string
+	for headerName, headerValues = range conf.Headers {
 		for _, headerValue := range headerValues {
 			ch = append(ch, makeResponseDecorator(headerName, headerValue))
 		}
