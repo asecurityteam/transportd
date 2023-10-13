@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/asecurityteam/runhttp"
+
 	transportd "github.com/asecurityteam/transportd/pkg"
 	"github.com/getkin/kin-openapi/openapi3filter"
 )
@@ -16,6 +18,7 @@ type inputValidatingTransport struct {
 }
 
 func (r *inputValidatingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	logger := runhttp.LoggerFromContext(req.Context())
 	route := transportd.RouteFromContext(req.Context())
 	params := transportd.PathParamsFromContext(req.Context())
 	input := &openapi3filter.RequestValidationInput{
@@ -29,6 +32,12 @@ func (r *inputValidatingTransport) RoundTrip(req *http.Request) (*http.Response,
 	}
 	err := openapi3filter.ValidateRequest(req.Context(), input)
 	if err != nil {
+		logger.Error(struct {
+			Message string `logevent:"message,default=validate-request-error"`
+			Reason  string `logevent:"reason"`
+		}{
+			Reason: err.Error(),
+		})
 		return newError(http.StatusBadRequest, err.Error()), nil
 	}
 	return r.Wrapped.RoundTrip(req)
@@ -68,6 +77,7 @@ type outputValidatingTransport struct {
 }
 
 func (r *outputValidatingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	logger := runhttp.LoggerFromContext(req.Context())
 	originalPath := req.URL.Path
 	resp, err := r.Wrapped.RoundTrip(req)
 	if err != nil {
@@ -111,6 +121,12 @@ func (r *outputValidatingTransport) RoundTrip(req *http.Request) (*http.Response
 	}
 	err = openapi3filter.ValidateResponse(req.Context(), input)
 	if err != nil {
+		logger.Error(struct {
+			Message string `logevent:"message,default=validate-response-error"`
+			Reason  string `logevent:"reason"`
+		}{
+			Reason: err.Error(),
+		})
 		return newError(http.StatusBadGateway, err.Error()), nil
 	}
 	return resp, nil
