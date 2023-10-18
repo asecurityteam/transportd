@@ -4,10 +4,8 @@ go 1.19
 
 require (
 	bitbucket.org/atlassian/go-asap v0.0.0-20190921160616-bb88d6193af9
-	bitbucket.org/atlassian/go-asap/v2 v2.6.0
 	github.com/SermoDigital/jose v0.9.2-0.20180104203859-803625baeddc
 	github.com/asecurityteam/httpstats v0.0.0-20200806153718-d71ff7ed1047
-	github.com/asecurityteam/httpstats/v2 v2.3.0
 	github.com/asecurityteam/logevent v1.6.1
 	github.com/asecurityteam/runhttp v0.6.1
 	github.com/asecurityteam/settings v1.0.0
@@ -22,16 +20,13 @@ require (
 	github.com/asecurityteam/component-connstate v0.2.0 // indirect
 	github.com/asecurityteam/component-expvar v0.2.0 // indirect
 	github.com/asecurityteam/component-log v0.2.1 // indirect
-	github.com/asecurityteam/component-shared v0.2.0 // indirect
 	github.com/asecurityteam/component-signals v0.2.0 // indirect
 	github.com/asecurityteam/component-stat v0.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
-	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-chi/chi v4.0.3+incompatible // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
-	github.com/go-yaml/yaml v2.1.0+incompatible // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/invopop/yaml v0.2.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -47,7 +42,6 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
