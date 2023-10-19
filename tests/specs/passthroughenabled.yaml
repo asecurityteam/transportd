@@ -123,10 +123,11 @@ paths:
       requestBody:
         required: true
         description: The event to publish.
-        application/octet-stream:
-          schema:
-            type: string
-            format: binary
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
       responses:
         "204":
           description: "Success"
