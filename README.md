@@ -29,7 +29,7 @@
 <a id="markdown-overview" name="overview"></a>
 ## Overview
 
-**Deprecation Notice:** This package will be archived and will be made read-only on January 30th, 2024. After January 30th it will cease to be maintained.
+**Deprecation Notice:** This package will be archived and will be made read-only on January 30th, 2024. After January 30th this repo will cease to be maintained in Github.
 
 This project aggregates all of our most effective tooling into an HTTP reverse proxy
 that removes all direct references to our tools from application code and extends
