@@ -29,6 +29,8 @@
 <a id="markdown-overview" name="overview"></a>
 ## Overview
 
+**Deprecation Notice:** This package will be archived and made read-only on January 30th, 2024. After January 30th this repo will cease to be maintained on Github.
+
 This project aggregates all of our most effective tooling into an HTTP reverse proxy
 that removes all direct references to our tools from application code and extends
 the possible languages/technical stacks that make use of our tools. The list of
