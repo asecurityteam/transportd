@@ -5,7 +5,7 @@ go 1.21
 require (
 	bitbucket.org/atlassian/go-asap v0.0.0-20190921160616-bb88d6193af9
 	github.com/SermoDigital/jose v0.9.2-0.20180104203859-803625baeddc
-	github.com/asecurityteam/httpstats v0.0.0-20200806153718-d71ff7ed1047
+	github.com/asecurityteam/httpstats/v2 v2.4.0
 	github.com/asecurityteam/logevent v1.6.1
 	github.com/asecurityteam/runhttp v0.6.1
 	github.com/asecurityteam/settings v1.0.0
@@ -38,8 +38,8 @@ require (
 	github.com/rs/xstats v0.0.0-20170813190920-c67367528e16 // indirect
 	github.com/rs/zerolog v1.29.0 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
-	golang.org/x/net v0.8.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/net v0.9.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
