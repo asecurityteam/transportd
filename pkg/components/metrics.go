@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/asecurityteam/httpstats/v2"
+	"github.com/asecurityteam/httpstats"
 )
 
 // MetricsConfig contains settings for request metrics emissions.
